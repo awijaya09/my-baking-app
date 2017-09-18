@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
@@ -20,23 +21,16 @@ import butterknife.ButterKnife;
 
 public class RecipeDetailActivity extends AppCompatActivity {
 
-   @BindView(R.id.text_view_recipe_name)
-    TextView mRecipeTitle;
-
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
-        ButterKnife.bind(this);
-
-        getIntentData();
     }
 
     private void getIntentData(){
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra(MainActivity.RECIPE_INTENT_KEY);
         Recipe recipe = bundle.getParcelable(MainActivity.RECIPE_BUNDLE_KEY);
-        mRecipeTitle.setText(recipe.recipeName);
     }
 }

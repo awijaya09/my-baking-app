@@ -27,8 +27,6 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
 
     @Override
     public void onItemSelected(Recipe recipe) {
-        Toast.makeText(this, "Recipe Selected for item: " + recipe.recipeName, Toast.LENGTH_SHORT).show();
-
         Bundle bundle = new Bundle();
         bundle.putParcelable(RECIPE_BUNDLE_KEY, recipe);
 
