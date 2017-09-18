@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">My Baking App</string>
+    <string name="recipe_title">This is the recipe name</string>
+    <string name="recipe_greeting_home">Hi! What are we making today?</string>
+</resources>
