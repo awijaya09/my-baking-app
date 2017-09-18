@@ -1,5 +1,6 @@
 package com.awijaya.mybakingapp;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -41,8 +43,25 @@ public class RecipeListFragment extends Fragment {
     private ArrayList<Recipe> mDataSources = new ArrayList<Recipe>() ;
     private boolean isDownloading = true;
 
+    OnItemClickListener mCallback;
+
+    public interface OnItemClickListener {
+        void onItemSelected(Recipe recipe);
+    }
+
     public RecipeListFragment(){
 
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try{
+            mCallback = (OnItemClickListener) context;
+        } catch (ClassCastException e){
+            Log.e(TAG, "onAttach: error " + e.getMessage());
+        }
     }
 
     @Override
@@ -70,10 +89,10 @@ public class RecipeListFragment extends Fragment {
                 ArrayList<Recipe> recipeList = response.body();
                 for (Recipe recipeItem: recipeList){
                     mDataSources.add(recipeItem);
-                    Log.d(TAG, "onResponse: The recipe results: "+ recipeItem.recipeName + "Recipe ID: " + recipeItem.recipeId);
+                    Log.d(TAG, "onResponse: The recipe results: "+ recipeItem.recipeName + " Recipe ID: " + recipeItem.recipeId);
                     ArrayList<Ingredient> ingredients = recipeItem.recipeIngredients;
                     ArrayList<Step> steps = recipeItem.recipeSteps;
-                    Log.d(TAG, "onResponse: Number of ingredients: " + ingredients.size() + "Number of Steps: " + steps.size());
+                    Log.d(TAG, "onResponse: Number of ingredients: " + ingredients.size() + " Number of Steps: " + steps.size());
                 }
 
                 HomeListViewAdapter adapter = new HomeListViewAdapter(getContext(), mDataSources);
@@ -82,6 +101,16 @@ public class RecipeListFragment extends Fragment {
                 isDownloading = false;
                 mProgressBar.setVisibility(View.GONE);
                 mListView.setVisibility(View.VISIBLE);
+
+                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        if (i > 0){
+                            mCallback.onItemSelected(mDataSources.get(i-1));
+                        }
+                    }
+                });
 
             }
 

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.http.HEAD;
 
 /**
  * Created by awijaya on 9/17/17.
@@ -30,7 +31,7 @@ public class HomeListViewAdapter extends BaseAdapter {
     }
     @Override
     public int getCount() {
-        return tempDataSource.size();
+        return tempDataSource.size() + 1;
     }
 
     @Override
@@ -44,21 +45,62 @@ public class HomeListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder viewHolder;
+    public int getViewTypeCount() {
+        return 2;
+    }
 
-        if (view != null){
-            viewHolder = (ViewHolder) view.getTag();
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0){
+            return 0;
         } else {
-            view = inflater.inflate(R.layout.recipe_list_item, viewGroup, false);
-            viewHolder = new ViewHolder(view);
-            view.setTag(viewHolder);
+            return 1;
+        }
+    }
+
+    @Override
+    public View getView(int position, View view, ViewGroup viewGroup) {
+
+        if (position == 0) {
+            HeaderViewHolder headerViewHolder;
+
+            if (view != null){
+                headerViewHolder = (HeaderViewHolder) view.getTag();
+            } else {
+                view = inflater.inflate(R.layout.recipe_list_item_header, viewGroup, false);
+                headerViewHolder = new HeaderViewHolder(view);
+                view.setTag(headerViewHolder);
+            }
+
+            return view;
+
+
+        } else {
+            ViewHolder viewHolder;
+
+            if (view != null){
+                viewHolder = (ViewHolder) view.getTag();
+            } else {
+                view = inflater.inflate(R.layout.recipe_list_item, viewGroup, false);
+                viewHolder = new ViewHolder(view);
+                view.setTag(viewHolder);
+            }
+
+            viewHolder.mRecipeTitle.setText(tempDataSource.get(position-1).recipeName);
+            viewHolder.mStepsCount.setText(tempDataSource.get(position-1).recipeSteps.size() + " Steps");
+
+            return view;
         }
 
-        viewHolder.mRecipeTitle.setText(tempDataSource.get(i).recipeName);
-        viewHolder.mStepsCount.setText(tempDataSource.get(i).recipeSteps.size() + " Steps");
+    }
 
-        return view;
+    static class HeaderViewHolder {
+        @BindView(R.id.text_view_master_list_title)
+        TextView mHeaderTextView;
+
+        public HeaderViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 
 
