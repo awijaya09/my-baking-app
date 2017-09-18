@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.awijaya.mybakingapp.Model.Recipe;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -20,9 +22,9 @@ import butterknife.ButterKnife;
 public class HomeListViewAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
-    private ArrayList<String> tempDataSource;
+    private ArrayList<Recipe> tempDataSource;
 
-    public HomeListViewAdapter(Context context, ArrayList<String> dataSource){
+    public HomeListViewAdapter(Context context, ArrayList<Recipe> dataSource){
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         tempDataSource = dataSource;
     }
@@ -53,7 +55,8 @@ public class HomeListViewAdapter extends BaseAdapter {
             view.setTag(viewHolder);
         }
 
-        viewHolder.mRecipeTitle.setText(tempDataSource.get(i));
+        viewHolder.mRecipeTitle.setText(tempDataSource.get(i).recipeName);
+        viewHolder.mStepsCount.setText(tempDataSource.get(i).recipeSteps.size() + " Steps");
 
         return view;
     }
@@ -65,6 +68,9 @@ public class HomeListViewAdapter extends BaseAdapter {
 
         @BindView(R.id.text_view_recipe_title)
         TextView mRecipeTitle;
+
+        @BindView(R.id.text_view_steps_count)
+        TextView mStepsCount;
 
         public ViewHolder(View view){
             ButterKnife.bind(this, view);

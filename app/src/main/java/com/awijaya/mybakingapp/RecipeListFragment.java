@@ -38,7 +38,7 @@ public class RecipeListFragment extends Fragment {
 
     private RetrofitInterface mInterface;
     private static final String TAG = "Retrofit Callback";
-    private ArrayList<String> mDataSources = new ArrayList<String>() ;
+    private ArrayList<Recipe> mDataSources = new ArrayList<Recipe>() ;
     private boolean isDownloading = true;
 
     public RecipeListFragment(){
@@ -69,7 +69,7 @@ public class RecipeListFragment extends Fragment {
 
                 ArrayList<Recipe> recipeList = response.body();
                 for (Recipe recipeItem: recipeList){
-                    mDataSources.add(recipeItem.recipeName);
+                    mDataSources.add(recipeItem);
                     Log.d(TAG, "onResponse: The recipe results: "+ recipeItem.recipeName + "Recipe ID: " + recipeItem.recipeId);
                     ArrayList<Ingredient> ingredients = recipeItem.recipeIngredients;
                     ArrayList<Step> steps = recipeItem.recipeSteps;
