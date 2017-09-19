@@ -1,51 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:layout_height="80dp"
-    android:background="@color/whiteBackround">
+    android:layout_height="wrap_content"
+    android:background="@color/whiteBackround"
+    android:orientation="horizontal">
 
-    <Button
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:id="@+id/btn_previous_steps"
-        android:text="@string/steps_previous_btn"
-        android:background="@color/whiteBackround"/>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="4"
-        android:paddingTop="8dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/text_view_steps_title"
-            tools:text="@string/step_title_dummy"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:gravity="center"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/text_view_steps_desc"
-            tools:text="@string/step_desc_dummy"
-            android:textSize="16sp"
-            android:textStyle="italic"
-            android:gravity="center"/>
-    </LinearLayout>
-
-    <Button
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:id="@+id/btn_next_steps"
-        android:text="@string/steps_next_btn"
-        android:background="@color/whiteBackround"/>
+    <TextView
+        android:id="@+id/text_view_ingredients_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/ing_title"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:gravity="center"/>
 
 </LinearLayout>

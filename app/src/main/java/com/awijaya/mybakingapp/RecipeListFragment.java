@@ -40,7 +40,7 @@ public class RecipeListFragment extends Fragment {
 
     private RetrofitInterface mInterface;
     private static final String TAG = "Retrofit Callback";
-    private ArrayList<Recipe> mDataSources = new ArrayList<Recipe>() ;
+    private ArrayList<Recipe> mDataSources = new ArrayList<Recipe>();
     private boolean isDownloading = true;
 
     OnItemClickListener mCallback;
@@ -49,7 +49,7 @@ public class RecipeListFragment extends Fragment {
         void onItemSelected(Recipe recipe);
     }
 
-    public RecipeListFragment(){
+    public RecipeListFragment() {
 
     }
 
@@ -57,9 +57,9 @@ public class RecipeListFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        try{
+        try {
             mCallback = (OnItemClickListener) context;
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             Log.e(TAG, "onAttach: error " + e.getMessage());
         }
     }
@@ -79,7 +79,7 @@ public class RecipeListFragment extends Fragment {
         return rootView;
     }
 
-    private void downloadRcipeList(){
+    private void downloadRcipeList() {
         Call<ArrayList<Recipe>> call = mInterface.getRecipeList();
         call.enqueue(new Callback<ArrayList<Recipe>>() {
             @Override
@@ -87,12 +87,11 @@ public class RecipeListFragment extends Fragment {
                 Log.d(TAG, "onResponse: Getting data from JSON");
 
                 ArrayList<Recipe> recipeList = response.body();
-                for (Recipe recipeItem: recipeList){
+                for (Recipe recipeItem : recipeList) {
                     mDataSources.add(recipeItem);
-                    Log.d(TAG, "onResponse: The recipe results: "+ recipeItem.recipeName + " Recipe ID: " + recipeItem.recipeId);
+
                     ArrayList<Ingredient> ingredients = recipeItem.recipeIngredients;
                     ArrayList<Step> steps = recipeItem.recipeSteps;
-                    Log.d(TAG, "onResponse: Number of ingredients: " + ingredients.size() + " Number of Steps: " + steps.size());
                 }
 
                 HomeListViewAdapter adapter = new HomeListViewAdapter(getContext(), mDataSources);
@@ -102,13 +101,12 @@ public class RecipeListFragment extends Fragment {
                 mProgressBar.setVisibility(View.GONE);
                 mListView.setVisibility(View.VISIBLE);
 
-                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        if (i > 0){
-                            mCallback.onItemSelected(mDataSources.get(i-1));
-                        }
+
+                        mCallback.onItemSelected(mDataSources.get(i));
                     }
                 });
 

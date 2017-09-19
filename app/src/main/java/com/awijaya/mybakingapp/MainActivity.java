@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.awijaya.mybakingapp.Model.Ingredient;
 import com.awijaya.mybakingapp.Model.Recipe;
+import com.awijaya.mybakingapp.Model.Step;
 
 import java.util.ArrayList;
 
@@ -17,6 +19,8 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
 
     public static final String RECIPE_BUNDLE_KEY = "recipe_item";
     public static final String RECIPE_INTENT_KEY = "recipe_key";
+    public static final String INGREDIENTS_BUNDLE_KEY = "ingredient_item";
+    public static final String STEPS_BUNDLE_KEY = "step_item";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,12 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
     public void onItemSelected(Recipe recipe) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(RECIPE_BUNDLE_KEY, recipe);
+
+        ArrayList<Ingredient> mIngredient = recipe.recipeIngredients;
+        bundle.putParcelableArrayList(INGREDIENTS_BUNDLE_KEY, mIngredient);
+
+        ArrayList<Step> mSteps = recipe.recipeSteps;
+        bundle.putParcelableArrayList(STEPS_BUNDLE_KEY, mSteps);
 
         final Intent intent = new Intent(this, RecipeDetailActivity.class);
         intent.putExtra(RECIPE_INTENT_KEY, bundle);

@@ -1,12 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:visibility="visible">
 
     <ListView
         android:id="@+id/list_view_recipe_steps"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="60dp"
+        tools:context=".RecipeDetailActivity"></ListView>
 
-</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorAccent"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_previous_steps"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@color/colorAccent"
+            android:text="@string/steps_previous_btn"
+            android:textColor="@color/whiteBackround" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/text_view_steps_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/whiteBackround"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="@string/step_title_dummy" />
+
+            <TextView
+                android:id="@+id/text_view_steps_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/whiteBackround"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                tools:text="@string/step_desc_dummy" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_next_steps"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@color/colorAccent"
+            android:text="@string/steps_next_btn"
+            android:textColor="@color/whiteBackround" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

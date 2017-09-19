@@ -4,5 +4,4 @@
     android:id="@+id/recipe_list_fragment"
     android:name="com.awijaya.mybakingapp.RecipeListFragment"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="16dp"></fragment>
+    android:layout_height="wrap_content"></fragment>

@@ -31,7 +31,7 @@ public class HomeListViewAdapter extends BaseAdapter {
     }
     @Override
     public int getCount() {
-        return tempDataSource.size() + 1;
+        return tempDataSource.size();
     }
 
     @Override
@@ -44,38 +44,10 @@ public class HomeListViewAdapter extends BaseAdapter {
         return i;
     }
 
-    @Override
-    public int getViewTypeCount() {
-        return 2;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (position == 0){
-            return 0;
-        } else {
-            return 1;
-        }
-    }
 
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
 
-        if (position == 0) {
-            HeaderViewHolder headerViewHolder;
-
-            if (view != null){
-                headerViewHolder = (HeaderViewHolder) view.getTag();
-            } else {
-                view = inflater.inflate(R.layout.recipe_list_item_header, viewGroup, false);
-                headerViewHolder = new HeaderViewHolder(view);
-                view.setTag(headerViewHolder);
-            }
-
-            return view;
-
-
-        } else {
             ViewHolder viewHolder;
 
             if (view != null){
@@ -86,23 +58,12 @@ public class HomeListViewAdapter extends BaseAdapter {
                 view.setTag(viewHolder);
             }
 
-            viewHolder.mRecipeTitle.setText(tempDataSource.get(position-1).recipeName);
-            viewHolder.mStepsCount.setText(tempDataSource.get(position-1).recipeSteps.size() + " Steps");
+            viewHolder.mRecipeTitle.setText(tempDataSource.get(position).recipeName);
+            viewHolder.mStepsCount.setText(tempDataSource.get(position).recipeSteps.size() + " Steps");
 
             return view;
-        }
 
     }
-
-    static class HeaderViewHolder {
-        @BindView(R.id.text_view_master_list_title)
-        TextView mHeaderTextView;
-
-        public HeaderViewHolder(View view) {
-            ButterKnife.bind(this, view);
-        }
-    }
-
 
     static class ViewHolder {
         @BindView(R.id.card_view_recipe)

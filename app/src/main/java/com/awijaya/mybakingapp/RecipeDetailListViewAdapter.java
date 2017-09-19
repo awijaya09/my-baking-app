@@ -2,6 +2,7 @@ package com.awijaya.mybakingapp;
 
 import android.content.Context;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,27 +35,24 @@ public class RecipeDetailListViewAdapter extends BaseAdapter {
     private ArrayList<Ingredient> mIngredient = new ArrayList<Ingredient>();
     private Recipe mRecipe;
 
+    private static final String TAG = "Recipe Detail Adapter";
+
     public RecipeDetailListViewAdapter(Context context, Recipe recipe){
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mRecipe = recipe;
         mIngredient = recipe.recipeIngredients;
+
     }
 
 
     @Override
     public int getCount() {
-        if( mIngredient != null) {
             return mIngredient.size()+2;
-        }
-        return 0;
     }
 
     @Override
     public Object getItem(int i) {
-        if (i > 1){
             return mIngredient.get(i-2);
-        }
-        return null;
     }
 
     @Override
@@ -69,10 +67,12 @@ public class RecipeDetailListViewAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (position > 1) {
-            return 3;
+        if (position == 0) {
+            return 0;
+        } else if (position == 1){
+            return 1;
         } else {
-            return position;
+            return 2;
         }
     }
 
@@ -82,7 +82,7 @@ public class RecipeDetailListViewAdapter extends BaseAdapter {
         if (position == 0) {
             VideoViewHolder videoViewHolder;
 
-            if (view != null){
+            if (view != null) {
                 videoViewHolder = (VideoViewHolder) view.getTag();
             } else {
                 view = inflater.inflate(R.layout.recipe_detail_video, viewGroup, false);
@@ -91,7 +91,6 @@ public class RecipeDetailListViewAdapter extends BaseAdapter {
             }
 
             return view;
-
         } else if (position == 1) {
             StepsViewHolder stepsViewHolder;
 
@@ -102,13 +101,11 @@ public class RecipeDetailListViewAdapter extends BaseAdapter {
                 stepsViewHolder = new StepsViewHolder(view);
                 view.setTag(stepsViewHolder);
             }
-            Step stepItem = mRecipe.recipeSteps.get(0);
-            stepsViewHolder.mStepsTitle.setText(stepItem.stepShortDescription);
-            stepsViewHolder.mStepsDesc.setText(stepItem.stepDescription);
 
             return view;
 
-        } else {
+        }
+            else {
             IngredientsViewHolder ingredientsViewHolder;
 
             if(view != null) {
@@ -119,7 +116,9 @@ public class RecipeDetailListViewAdapter extends BaseAdapter {
                 view.setTag(ingredientsViewHolder);
             }
             Ingredient ingredientItem = mRecipe.recipeIngredients.get(position-2);
-            ingredientsViewHolder.mIngredientText.setText(ingredientItem.ingredientQuantity + " " + ingredientItem.ingredientMeasure + " " + ingredientItem.ingredientName);
+            ingredientsViewHolder.mIngQty.setText(String.valueOf(ingredientItem.ingredientQuantity));
+            ingredientsViewHolder.mIngMeasure.setText(ingredientItem.ingredientMeasure);
+            ingredientsViewHolder.mIngName.setText(ingredientItem.ingredientName);
 
             return view;
         }
@@ -137,17 +136,8 @@ public class RecipeDetailListViewAdapter extends BaseAdapter {
     }
 
     static class StepsViewHolder {
-        @BindView(R.id.text_view_steps_title)
-        TextView mStepsTitle;
-
-        @BindView(R.id.text_view_steps_desc)
-        TextView mStepsDesc;
-
-        @BindView(R.id.btn_previous_steps)
-        Button mPrevStepBtn;
-
-        @BindView(R.id.btn_next_steps)
-        Button mNextStepBtn;
+        @BindView(R.id.text_view_ingredients_title)
+        TextView mIngTitle;
 
         public StepsViewHolder(View view){
             ButterKnife.bind(this, view);
@@ -155,8 +145,14 @@ public class RecipeDetailListViewAdapter extends BaseAdapter {
     }
 
     static class IngredientsViewHolder {
-        @BindView(R.id.text_view_ingredient_item)
-        TextView mIngredientText;
+        @BindView(R.id.text_view_ingredient_item_qty)
+        TextView mIngQty;
+
+        @BindView(R.id.text_view_ingredient_item_measure)
+        TextView mIngMeasure;
+
+        @BindView(R.id.text_view_ingredient_item_name)
+        TextView mIngName;
 
         public IngredientsViewHolder(View view){
             ButterKnife.bind(this, view);
