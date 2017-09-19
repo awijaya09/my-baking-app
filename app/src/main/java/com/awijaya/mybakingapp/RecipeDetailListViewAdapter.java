@@ -31,12 +31,13 @@ public class RecipeDetailListViewAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
     private ArrayList<Step> mSteps;
-    private ArrayList<Ingredient> mIngredient;
+    private ArrayList<Ingredient> mIngredient = new ArrayList<Ingredient>();
     private Recipe mRecipe;
 
     public RecipeDetailListViewAdapter(Context context, Recipe recipe){
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mRecipe = recipe;
+        mIngredient = recipe.recipeIngredients;
     }
 
 

@@ -23,24 +23,32 @@ import butterknife.ButterKnife;
 public class RecipeDetailActivity extends AppCompatActivity {
 
     private FragmentManager mFragmentManager;
+    private Bundle mBundle;
+    private Recipe mRecipe;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
+        Intent intent = getIntent();
+        mBundle = intent.getBundleExtra(MainActivity.RECIPE_INTENT_KEY);
+        mRecipe = mBundle.getParcelable(MainActivity.RECIPE_BUNDLE_KEY);
+        RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
+        recipeDetailFragment.setRecipeItem(mRecipe);
+
         mFragmentManager = getSupportFragmentManager();
 
-        getIntentData();
+        mFragmentManager.beginTransaction()
+                .replace(R.id.recipe_detail_container, recipeDetailFragment)
+                .commit();
+
     }
+
+
 
     private void getIntentData(){
-        Intent intent = getIntent();
-        Bundle bundle = intent.getBundleExtra(MainActivity.RECIPE_INTENT_KEY);
-        Recipe recipe = bundle.getParcelable(MainActivity.RECIPE_BUNDLE_KEY);
-
-        RecipeDetailFragment fragObject = new RecipeDetailFragment();
-        fragObject.setArguments(bundle);
-        mFragmentManager.beginTransaction().replace(R.id.recipe_detail_fragment, fragObject).commit();
 
     }
+
 }

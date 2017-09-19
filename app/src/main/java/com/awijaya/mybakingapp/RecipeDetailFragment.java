@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import butterknife.ButterKnife;
 
 public class RecipeDetailFragment extends Fragment {
 
+    private static final String TAG = "Recipe Fragment";
+
     @BindView(R.id.list_view_recipe_steps)
     ListView mListViewSteps;
 
@@ -37,17 +40,20 @@ public class RecipeDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         ButterKnife.bind(this, rootView);
 
-        if(getArguments() != null){
-            mRecipe = this.getArguments().getBundle(MainActivity.RECIPE_BUNDLE_KEY).getParcelable(MainActivity.RECIPE_BUNDLE_KEY);
-        }
-
         setupDetailView();
         return rootView;
     }
 
     private void setupDetailView(){
+
         RecipeDetailListViewAdapter adapter = new RecipeDetailListViewAdapter(getContext(), mRecipe);
         mListViewSteps.setAdapter(adapter);
 
     }
+
+    public void setRecipeItem(Recipe recipe){
+        this.mRecipe = recipe;
+
+    }
+
 }
