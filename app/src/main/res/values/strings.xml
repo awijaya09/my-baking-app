@@ -2,4 +2,8 @@
     <string name="app_name">My Baking App</string>
     <string name="recipe_title">This is the recipe name</string>
     <string name="recipe_greeting_home">Hi! What are we making today?</string>
+    <string name="steps_previous_btn">Prev</string>
+    <string name="steps_next_btn">Next</string>
+    <string name="step_title_dummy">Step Title</string>
+    <string name="step_desc_dummy">Step Description</string>
 </resources>
