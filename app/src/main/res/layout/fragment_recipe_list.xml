@@ -13,14 +13,14 @@
         android:layout_height="wrap_content"
         android:divider="@null"
         android:dividerHeight="0dp"
-        tools:context="com.awijaya.mybakingapp.MainActivity"
+        android:padding="16dp"
         android:visibility="invisible"
-        android:padding="16dp"></ListView>
+        tools:context="com.awijaya.mybakingapp.MainActivity"></ListView>
 
     <ProgressBar
         android:id="@+id/progress_bar_mainlist_fragment"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:visibility="visible"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:visibility="visible" />
 </LinearLayout>

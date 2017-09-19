@@ -7,37 +7,67 @@
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
     android:padding="16dp"
-    app:cardBackgroundColor="@color/colorAccent"
+    app:cardBackgroundColor="@color/whiteBackround"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_cook" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_view_recipe_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="0dp"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:textColor="@color/primary_text"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="@string/recipe_title" />
+
+            <TextView
+                android:id="@+id/text_view_steps_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="0dp"
+                android:textColor="@color/secondary_text"
+                android:textSize="15sp"
+                android:textStyle="italic"
+                tools:text="7 Steps" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/text_view_recipe_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="0dp"
+            android:id="@+id/text_view_estimated_time"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:background="@color/primary_light"
+            android:gravity="center"
+            android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            android:paddingTop="16dp"
-            android:textColor="@color/whiteBackround"
-            android:textSize="20sp"
-            tools:text="@string/recipe_title"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/text_view_steps_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:paddingStart="16dp"
-            android:paddingTop="0dp"
-            android:textColor="@color/whiteBackround"
-            android:textSize="15sp"
-            tools:text="7 Steps"
-            android:textStyle="italic"/>
+            android:text="@string/estimated_time"
+            android:textColor="@color/colorPrimary"
+            android:textSize="12sp"
+            android:textStyle="italic" />
 
     </LinearLayout>
 

@@ -10,9 +10,9 @@
         android:id="@+id/text_view_ingredients_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:gravity="center"
         android:text="@string/ing_title"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:gravity="center"/>
+        android:textStyle="bold" />
 
 </LinearLayout>

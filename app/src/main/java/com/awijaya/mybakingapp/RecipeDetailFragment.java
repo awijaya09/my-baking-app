@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -41,6 +42,12 @@ public class RecipeDetailFragment extends Fragment {
     @BindView(R.id.text_view_steps_desc)
     TextView mStepDesc;
 
+    @BindView(R.id.btn_previous_steps)
+    Button mPrevBtn;
+
+    @BindView(R.id.btn_next_steps)
+    Button mNextBtn;
+
     private Recipe mRecipe;
 
     public RecipeDetailFragment(){
@@ -57,6 +64,10 @@ public class RecipeDetailFragment extends Fragment {
 
         mStepTitle.setText(mRecipe.recipeSteps.get(curIndex).stepDescription);
         mStepDesc.setText(mRecipe.recipeSteps.get(curIndex).stepShortDescription);
+
+        if(curIndex == 0){
+            mPrevBtn.setEnabled(false);
+        }
         return rootView;
     }
 

@@ -58,9 +58,10 @@ public class HomeListViewAdapter extends BaseAdapter {
                 view.setTag(viewHolder);
             }
 
+            int stepCounter = tempDataSource.get(position).recipeSteps.size();
             viewHolder.mRecipeTitle.setText(tempDataSource.get(position).recipeName);
-            viewHolder.mStepsCount.setText(tempDataSource.get(position).recipeSteps.size() + " Steps");
-
+            viewHolder.mStepsCount.setText(stepCounter+ " Steps");
+            viewHolder.mEstimatedTime.setText(stepCounter*5 + " Minutes");
             return view;
 
     }
@@ -74,6 +75,9 @@ public class HomeListViewAdapter extends BaseAdapter {
 
         @BindView(R.id.text_view_steps_count)
         TextView mStepsCount;
+
+        @BindView(R.id.text_view_estimated_time)
+        TextView mEstimatedTime;
 
         public ViewHolder(View view){
             ButterKnife.bind(this, view);
