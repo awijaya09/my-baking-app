@@ -36,14 +36,17 @@ public class RecipeDetailListViewAdapter extends BaseAdapter {
 
     public RecipeDetailListViewAdapter(Context context, Recipe recipe){
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.mRecipe = recipe;
+        mRecipe = recipe;
         mIngredient = recipe.recipeIngredients;
     }
 
 
     @Override
     public int getCount() {
-        return mIngredient.size()+2;
+        if( mIngredient != null) {
+            return mIngredient.size()+2;
+        }
+        return 0;
     }
 
     @Override

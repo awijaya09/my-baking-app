@@ -46,8 +46,10 @@ public class RecipeDetailFragment extends Fragment {
 
     private void setupDetailView(){
 
-        RecipeDetailListViewAdapter adapter = new RecipeDetailListViewAdapter(getContext(), mRecipe);
-        mListViewSteps.setAdapter(adapter);
+        if (mRecipe != null){
+            RecipeDetailListViewAdapter adapter = new RecipeDetailListViewAdapter(getContext(), mRecipe);
+            mListViewSteps.setAdapter(adapter);
+        }
 
     }
 
