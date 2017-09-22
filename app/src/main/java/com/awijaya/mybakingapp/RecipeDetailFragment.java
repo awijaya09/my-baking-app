@@ -59,7 +59,7 @@ public class RecipeDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         ButterKnife.bind(this, rootView);
 
-        RecipeDetailListViewAdapter adapter = new RecipeDetailListViewAdapter(getContext(), mRecipe);
+        RecipeDetailListViewAdapter adapter = new RecipeDetailListViewAdapter(getContext(), mRecipe, curIndex);
         mListViewSteps.setAdapter(adapter);
 
         mStepTitle.setText(mRecipe.recipeSteps.get(curIndex).stepDescription);

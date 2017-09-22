@@ -1,6 +1,13 @@
 package com.awijaya.mybakingapp;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
+import android.media.session.MediaSession;
+import android.net.Uri;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v7.widget.VectorEnabledTintResources;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +21,25 @@ import android.widget.TextView;
 import com.awijaya.mybakingapp.Model.Ingredient;
 import com.awijaya.mybakingapp.Model.Recipe;
 import com.awijaya.mybakingapp.Model.Step;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.extractor.ExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 
 import org.w3c.dom.Text;
 
@@ -28,19 +53,27 @@ import butterknife.ButterKnife;
  * Created by awijaya on 9/18/17.
  */
 
-public class RecipeDetailListViewAdapter extends BaseAdapter {
+public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlayer.EventListener{
 
     private LayoutInflater inflater;
     private ArrayList<Step> mSteps;
     private ArrayList<Ingredient> mIngredient = new ArrayList<Ingredient>();
     private Recipe mRecipe;
+    private int mIndex;
+
+    private MediaSessionCompat mMediaSession;
+    private SimpleExoPlayer mExoPlayer;
+    private PlaybackStateCompat.Builder mStateBuilder;
+    private Context mContext;
+    private static final String MEDIA_TAG = "Media Session";
 
     private static final String TAG = "Recipe Detail Adapter";
 
-    public RecipeDetailListViewAdapter(Context context, Recipe recipe){
+    public RecipeDetailListViewAdapter(Context context, Recipe recipe, int stepIndex){
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mRecipe = recipe;
         mIngredient = recipe.recipeIngredients;
+        mIndex = stepIndex;
 
     }
 
@@ -90,6 +123,13 @@ public class RecipeDetailListViewAdapter extends BaseAdapter {
                 view.setTag(videoViewHolder);
             }
 
+            mContext = view.getContext();
+            initializeMediaSession();
+
+            Uri mediaURI = Uri.parse(mRecipe.recipeSteps.get(mIndex).stepVideoURL);
+
+            initializePlayer(videoViewHolder.mSimpleExoPlayer, mediaURI);
+
             return view;
         } else if (position == 1) {
             StepsViewHolder stepsViewHolder;
@@ -126,14 +166,113 @@ public class RecipeDetailListViewAdapter extends BaseAdapter {
 
     }
 
+    @Override
+    public void onTimelineChanged(Timeline timeline, Object manifest) {
+
+    }
+
+    @Override
+    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
+    }
+
+    @Override
+    public void onLoadingChanged(boolean isLoading) {
+
+    }
+
+    @Override
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+
+    }
+
+    @Override
+    public void onRepeatModeChanged(int repeatMode) {
+
+    }
+
+    @Override
+    public void onPlayerError(ExoPlaybackException error) {
+
+    }
+
+    @Override
+    public void onPositionDiscontinuity() {
+
+    }
+
+    @Override
+    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+    }
+
+    private void initializeMediaSession() {
+        mMediaSession = new MediaSessionCompat(mContext, TAG);
+        mMediaSession.setMediaButtonReceiver(null);
+        mStateBuilder = new PlaybackStateCompat.Builder()
+                .setActions(
+                        PlaybackStateCompat.ACTION_PLAY |
+                                PlaybackStateCompat.ACTION_PAUSE |
+                                PlaybackStateCompat.ACTION_PLAY_PAUSE
+                );
+
+        mMediaSession.setPlaybackState(mStateBuilder.build());
+
+        mMediaSession.setCallback(new MySessionCallback());
+
+        mMediaSession.setActive(true);
+    }
+
+    private void initializePlayer(SimpleExoPlayerView mSimpleExoPlayerView, Uri mediaUri) {
+        if(mExoPlayer == null){
+            TrackSelector trackSelector = new DefaultTrackSelector();
+            LoadControl loadControl = new DefaultLoadControl();
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(mContext, trackSelector);
+            mSimpleExoPlayerView.setPlayer(mExoPlayer);
+
+            ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+            DefaultDataSourceFactory defaultDataSourceFactory = new DefaultDataSourceFactory(mContext, "BakingMedia");
+
+            MediaSource mediaSource = new ExtractorMediaSource(mediaUri, defaultDataSourceFactory, extractorsFactory, null, null );
+            mExoPlayer.prepare(mediaSource);
+            mExoPlayer.setPlayWhenReady(true);
+        }
+    }
+
+    private class MySessionCallback extends MediaSessionCompat.Callback {
+
+        @Override
+        public void onPlay() {
+            mExoPlayer.setPlayWhenReady(true);
+        }
+
+        @Override
+        public void onPause() {
+            mExoPlayer.setPlayWhenReady(false);
+        }
+
+        @Override
+        public void onSkipToPrevious() {
+            mExoPlayer.seekTo(0);
+        }
+    }
+
+
+
+    // View Holder Class for 3 different types of view holder
     static class VideoViewHolder {
         @BindView(R.id.simple_exoplayer)
         SimpleExoPlayerView mSimpleExoPlayer;
 
         public VideoViewHolder(View view){
+
             ButterKnife.bind(this, view);
+            mSimpleExoPlayer.setDefaultArtwork(BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.exoplayer_artwork));
+
         }
+        
     }
+
 
     static class StepsViewHolder {
         @BindView(R.id.text_view_ingredients_title)
