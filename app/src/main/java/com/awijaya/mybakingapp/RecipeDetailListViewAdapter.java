@@ -59,7 +59,6 @@ public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlaye
 
     private LayoutInflater inflater;
     private ArrayList<Step> mSteps = new ArrayList<Step>();
-    private ArrayList<Ingredient> mIngredient = new ArrayList<Ingredient>();
     private Recipe mRecipe;
     private int mIndex;
 
@@ -74,7 +73,6 @@ public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlaye
     public RecipeDetailListViewAdapter(Context context, Recipe recipe, int stepIndex){
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mRecipe = recipe;
-        mIngredient = recipe.recipeIngredients;
         mSteps = recipe.recipeSteps;
         mIndex = stepIndex;
 
@@ -127,10 +125,11 @@ public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlaye
             }
 
             mContext = view.getContext();
-            initializeMediaSession();
+
 
             Uri mediaURI = Uri.parse(mRecipe.recipeSteps.get(mIndex).stepVideoURL);
 
+            initializeMediaSession();
             initializePlayer(videoViewHolder.mSimpleExoPlayer, mediaURI);
 
             return view;
@@ -210,9 +209,12 @@ public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlaye
 
 
     public void releasePlayer(){
-        mExoPlayer.stop();
-        mExoPlayer.release();
-        mExoPlayer = null;
+        if (mExoPlayer != null){
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
+
     }
 
     public void playNextVideo(Uri mediaUri){

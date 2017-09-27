@@ -20,6 +20,7 @@ import com.awijaya.mybakingapp.Networking.RetrofitClient;
 import com.awijaya.mybakingapp.Networking.RetrofitInterface;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -32,6 +33,9 @@ import butterknife.ButterKnife;
 public class RecipeDetailFragment extends Fragment {
 
     private static final String TAG = "Recipe Fragment";
+    private static final String RECIPE_KEY = "recipe";
+    public static final String INDEX_KEY = "curIndex";
+    public static final String ING_KEY = "ingKey";
     private int curIndex = 0;
 
     @BindView(R.id.list_view_recipe_steps)
@@ -49,6 +53,7 @@ public class RecipeDetailFragment extends Fragment {
     private Recipe mRecipe;
     private RecipeDetailListViewAdapter mAdapter;
     private ArrayList<Step> mSteps;
+    private ArrayList<Ingredient> mIngredients;
 
     public RecipeDetailFragment(){
 
@@ -59,9 +64,16 @@ public class RecipeDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         ButterKnife.bind(this, rootView);
 
+        if (savedInstanceState != null) {
+            mRecipe = savedInstanceState.getParcelable(RECIPE_KEY);
+            curIndex = savedInstanceState.getInt(INDEX_KEY);
+        }
+
+        Log.d(TAG, "onCreateView: curIndex value: " + curIndex);
         mAdapter = new RecipeDetailListViewAdapter(getContext(), mRecipe, curIndex);
         mListViewSteps.setAdapter(mAdapter);
         mSteps = mRecipe.recipeSteps;
+        mIngredients = mRecipe.recipeIngredients;
 
         updateStepsTitle(mSteps.get(curIndex));
 
@@ -95,8 +107,16 @@ public class RecipeDetailFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(RECIPE_KEY, mRecipe);
+        outState.putInt(INDEX_KEY, curIndex);
+        outState.putParcelableArrayList(ING_KEY, mIngredients);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mAdapter.releasePlayer();
+        Log.d(TAG, "onDestroyView: The view has been destroyed");
     }
 }
