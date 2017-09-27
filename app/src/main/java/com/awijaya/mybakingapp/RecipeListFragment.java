@@ -40,6 +40,7 @@ public class RecipeListFragment extends Fragment {
 
     private RetrofitInterface mInterface;
     private static final String TAG = "Retrofit Callback";
+    private static final String RECIPE_LIST_KEY = "recipeList";
     private ArrayList<Recipe> mDataSources = new ArrayList<Recipe>();
     private boolean isDownloading = true;
 
@@ -69,6 +70,13 @@ public class RecipeListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_recipe_list, container, false);
         ButterKnife.bind(this, rootView);
 
+        if (savedInstanceState != null) {
+            mDataSources = savedInstanceState.getParcelableArrayList(RECIPE_LIST_KEY);
+            isDownloading = false;
+            setCallBackForEachRecipe();
+            showRecipeList();
+        }
+
         if (isDownloading) {
             mProgressBar.animate();
         }
@@ -80,43 +88,59 @@ public class RecipeListFragment extends Fragment {
     }
 
     private void downloadRcipeList() {
-        Call<ArrayList<Recipe>> call = mInterface.getRecipeList();
-        call.enqueue(new Callback<ArrayList<Recipe>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
-                Log.d(TAG, "onResponse: Getting data from JSON");
+        if (mDataSources == null || mDataSources.isEmpty()) {
+            Call<ArrayList<Recipe>> call = mInterface.getRecipeList();
+            call.enqueue(new Callback<ArrayList<Recipe>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
+                    Log.d(TAG, "onResponse: Getting data from JSON");
 
-                ArrayList<Recipe> recipeList = response.body();
-                for (Recipe recipeItem : recipeList) {
-                    mDataSources.add(recipeItem);
+                    ArrayList<Recipe> recipeList = response.body();
+                    for (Recipe recipeItem : recipeList) {
+                        mDataSources.add(recipeItem);
 
-                    ArrayList<Ingredient> ingredients = recipeItem.recipeIngredients;
-                    ArrayList<Step> steps = recipeItem.recipeSteps;
+                        ArrayList<Ingredient> ingredients = recipeItem.recipeIngredients;
+                        ArrayList<Step> steps = recipeItem.recipeSteps;
+                    }
+
+                    setCallBackForEachRecipe();
+                    showRecipeList();
+
                 }
 
-                HomeListViewAdapter adapter = new HomeListViewAdapter(getContext(), mDataSources);
-                mListView.setAdapter(adapter);
+                @Override
+                public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
+                    Log.e(TAG, "onFailure: Unable to get data from JSON" + t.getMessage());
+                    call.cancel();
+                }
+            });
+        }
 
-                isDownloading = false;
-                mProgressBar.setVisibility(View.GONE);
-                mListView.setVisibility(View.VISIBLE);
+    }
 
-                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                        mCallback.onItemSelected(mDataSources.get(i));
-                    }
-                });
-
-            }
+    private void setCallBackForEachRecipe(){
+        HomeListViewAdapter adapter = new HomeListViewAdapter(getContext(), mDataSources);
+        mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
-                Log.e(TAG, "onFailure: Unable to get data from JSON" + t.getMessage());
-                call.cancel();
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                mCallback.onItemSelected(mDataSources.get(i));
             }
         });
+    }
+
+    private void showRecipeList(){
+        isDownloading = false;
+        mProgressBar.setVisibility(View.GONE);
+        mListView.setVisibility(View.VISIBLE);
+    }
+
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(RECIPE_LIST_KEY, mDataSources);
     }
 }

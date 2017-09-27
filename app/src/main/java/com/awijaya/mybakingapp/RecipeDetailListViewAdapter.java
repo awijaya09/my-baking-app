@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.awijaya.mybakingapp.Model.Ingredient;
 import com.awijaya.mybakingapp.Model.Recipe;
@@ -31,6 +32,7 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.extractor.ExtractorsFactory;
+import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
@@ -155,10 +157,9 @@ public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlaye
                 ingredientsViewHolder = new IngredientsViewHolder(view);
                 view.setTag(ingredientsViewHolder);
             }
-            Ingredient ingredientItem = mRecipe.recipeIngredients.get(position-2);
-            ingredientsViewHolder.mIngQty.setText(String.valueOf(ingredientItem.ingredientQuantity));
-            ingredientsViewHolder.mIngMeasure.setText(ingredientItem.ingredientMeasure);
-            ingredientsViewHolder.mIngName.setText(ingredientItem.ingredientName);
+            Step stepItem = mRecipe.recipeSteps.get(position-2);
+            ingredientsViewHolder.mIngQty.setText(stepItem.stepShortDescription);
+            ingredientsViewHolder.mIngMeasure.setText(stepItem.stepDescription);
 
             return view;
         }
@@ -206,6 +207,26 @@ public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlaye
 
     }
 
+
+    public void releasePlayer(){
+        mExoPlayer.stop();
+        mExoPlayer.release();
+        mExoPlayer = null;
+    }
+
+    public void playNextVideo(Uri mediaUri){
+        Toast.makeText(mContext, mediaUri.toString(), Toast.LENGTH_SHORT).show();
+        mExoPlayer.stop();
+
+        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+        DefaultDataSourceFactory defaultDataSourceFactory = new DefaultDataSourceFactory(mContext, "BakingMedia");
+
+        MediaSource mediaSource = new ExtractorMediaSource(mediaUri, defaultDataSourceFactory, extractorsFactory, null, null );
+        mExoPlayer.prepare(mediaSource);
+        mExoPlayer.setPlayWhenReady(true);
+
+    }
+
     private void initializeMediaSession() {
         mMediaSession = new MediaSessionCompat(mContext, TAG);
         mMediaSession.setMediaButtonReceiver(null);
@@ -234,6 +255,7 @@ public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlaye
             DefaultDataSourceFactory defaultDataSourceFactory = new DefaultDataSourceFactory(mContext, "BakingMedia");
 
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, defaultDataSourceFactory, extractorsFactory, null, null );
+
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
         }
@@ -270,12 +292,12 @@ public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlaye
             mSimpleExoPlayer.setDefaultArtwork(BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.exoplayer_artwork));
 
         }
-        
+
     }
 
 
     static class StepsViewHolder {
-        @BindView(R.id.text_view_ingredients_title)
+        @BindView(R.id.text_view_steps_title)
         TextView mIngTitle;
 
         public StepsViewHolder(View view){
@@ -289,9 +311,6 @@ public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlaye
 
         @BindView(R.id.text_view_ingredient_item_measure)
         TextView mIngMeasure;
-
-        @BindView(R.id.text_view_ingredient_item_name)
-        TextView mIngName;
 
         public IngredientsViewHolder(View view){
             ButterKnife.bind(this, view);

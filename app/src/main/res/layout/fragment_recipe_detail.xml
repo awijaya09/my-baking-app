@@ -48,15 +48,6 @@
                 android:textStyle="bold"
                 tools:text="@string/step_title_dummy" />
 
-            <TextView
-                android:id="@+id/text_view_steps_desc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/whiteBackround"
-                android:textSize="12sp"
-                android:textStyle="italic"
-                tools:text="@string/step_desc_dummy" />
         </LinearLayout>
 
         <Button

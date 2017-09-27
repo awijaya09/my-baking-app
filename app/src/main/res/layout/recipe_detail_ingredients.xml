@@ -11,34 +11,28 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
+       android:padding="8dp"
         android:textSize="12sp"
         android:textStyle="bold"
-        tools:text="@string/ing_dummy" />
+        tools:text="@string/ing_dummy_short" />
 
-    <TextView
-        android:id="@+id/text_view_ingredient_item_measure"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
-        android:textSize="12sp"
-        tools:text="@string/ing_dummy" />
-
-    <TextView
-        android:id="@+id/text_view_ingredient_item_name"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:gravity="center"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
-        android:textSize="12sp"
-        android:textStyle="italic"
-        tools:text="@string/ing_dummy" />
+        android:layout_weight="3"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_view_ingredient_item_measure"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="8dp"
+            android:textSize="12sp"
+            tools:text="@string/ing_dummy" />
+
+
+    </LinearLayout>
 
 
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.awijaya.mybakingapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -39,9 +40,6 @@ public class RecipeDetailFragment extends Fragment {
     @BindView(R.id.text_view_steps_title)
     TextView mStepTitle;
 
-    @BindView(R.id.text_view_steps_desc)
-    TextView mStepDesc;
-
     @BindView(R.id.btn_previous_steps)
     Button mPrevBtn;
 
@@ -49,6 +47,8 @@ public class RecipeDetailFragment extends Fragment {
     Button mNextBtn;
 
     private Recipe mRecipe;
+    private RecipeDetailListViewAdapter mAdapter;
+    private ArrayList<Step> mSteps;
 
     public RecipeDetailFragment(){
 
@@ -59,23 +59,45 @@ public class RecipeDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         ButterKnife.bind(this, rootView);
 
-        RecipeDetailListViewAdapter adapter = new RecipeDetailListViewAdapter(getContext(), mRecipe, curIndex);
-        mListViewSteps.setAdapter(adapter);
+        mAdapter = new RecipeDetailListViewAdapter(getContext(), mRecipe, curIndex);
+        mListViewSteps.setAdapter(mAdapter);
+        mSteps = mRecipe.recipeSteps;
 
-        mStepTitle.setText(mRecipe.recipeSteps.get(curIndex).stepDescription);
-        mStepDesc.setText(mRecipe.recipeSteps.get(curIndex).stepShortDescription);
+        updateStepsTitle(mSteps.get(curIndex));
 
         if(curIndex == 0){
             mPrevBtn.setEnabled(false);
         }
+        setNextBtnClick();
         return rootView;
     }
 
+    private void setNextBtnClick(){
+        mNextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                curIndex++;
+                Log.d(TAG, "onClick: video url: " + mSteps.get(curIndex).stepVideoURL);
+                Uri mediaUri = Uri.parse(mSteps.get(curIndex).stepVideoURL);
+                mAdapter.playNextVideo(mediaUri);
+
+                updateStepsTitle(mSteps.get(curIndex));
+            }
+        });
+    }
+
+    private void updateStepsTitle(Step newStep){
+        mStepTitle.setText(newStep.stepShortDescription);
+    }
 
     public void setRecipeItem(Recipe recipe){
         this.mRecipe = recipe;
 
     }
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mAdapter.releasePlayer();
+    }
 }

@@ -5,7 +5,9 @@
     <string name="steps_next_btn">Next</string>
     <string name="step_title_dummy">Step Title</string>
     <string name="step_desc_dummy">Step Description</string>
-    <string name="ing_dummy">1 TBLSPN Tea</string>
-    <string name="ing_title">Ingredients</string>
+    <string name="ing_dummy">2. Whisk the graham cracker crumbs, 50 grams (1/4 cup) of sugar, and 1/2 teaspoon of salt together in a medium bowl. Pour the melted butter and 1 teaspoon of vanilla into the dry ingredients and stir together until evenly mixed.</string>
+    <string name="ing_dummy_short">Prep the cookie crust.</string>
+    <string name="ing_title">Step(s)</string>
     <string name="estimated_time">35 Mins</string>
+    <string name="ingredient_dialog_title">Ingredients</string>
 </resources>
