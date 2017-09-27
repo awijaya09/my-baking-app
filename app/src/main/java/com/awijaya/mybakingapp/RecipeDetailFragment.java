@@ -77,7 +77,6 @@ public class RecipeDetailFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 curIndex++;
-                Log.d(TAG, "onClick: video url: " + mSteps.get(curIndex).stepVideoURL);
                 Uri mediaUri = Uri.parse(mSteps.get(curIndex).stepVideoURL);
                 mAdapter.playNextVideo(mediaUri);
 

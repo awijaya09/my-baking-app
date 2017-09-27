@@ -58,7 +58,7 @@ import butterknife.ButterKnife;
 public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlayer.EventListener{
 
     private LayoutInflater inflater;
-    private ArrayList<Step> mSteps;
+    private ArrayList<Step> mSteps = new ArrayList<Step>();
     private ArrayList<Ingredient> mIngredient = new ArrayList<Ingredient>();
     private Recipe mRecipe;
     private int mIndex;
@@ -75,6 +75,7 @@ public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlaye
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mRecipe = recipe;
         mIngredient = recipe.recipeIngredients;
+        mSteps = recipe.recipeSteps;
         mIndex = stepIndex;
 
     }
@@ -82,12 +83,12 @@ public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlaye
 
     @Override
     public int getCount() {
-            return mIngredient.size()+2;
+            return mSteps.size()+2;
     }
 
     @Override
     public Object getItem(int i) {
-            return mIngredient.get(i-2);
+            return mSteps.get(i-2);
     }
 
     @Override
@@ -215,7 +216,6 @@ public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlaye
     }
 
     public void playNextVideo(Uri mediaUri){
-        Toast.makeText(mContext, mediaUri.toString(), Toast.LENGTH_SHORT).show();
         mExoPlayer.stop();
 
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
