@@ -1,6 +1,7 @@
 package com.awijaya.mybakingapp;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
@@ -22,10 +23,22 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
     public static final String INGREDIENTS_BUNDLE_KEY = "ingredient_item";
     public static final String STEPS_BUNDLE_KEY = "step_item";
 
+    private boolean mTwoPane = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (findViewById(R.id.recipe_list_fragment) != null) {
+            mTwoPane = true;
+
+            if (savedInstanceState == null){
+
+            }
+        } else {
+            mTwoPane = false;
+        }
 
     }
 
