@@ -3,24 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    tools:context=".MainActivity">
-
-    <fragment
-        android:id="@+id/recipe_list_fragment"
-        class="com.awijaya.mybakingapp.RecipeListFragment"
-        android:layout_width="300dp"
-        android:layout_height="match_parent" />
-
-    <view
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:background="@android:color/darker_gray" />
+    android:orientation="horizontal">
 
     <FrameLayout
-        android:id="@+id/recipe_detail_fragment"
+        android:id="@+id/recipe_list_fragment_frame"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+     />
+
+    <FrameLayout
+        android:id="@+id/recipe_detail_fragment_frame"
         android:layout_width="500dp"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
     </FrameLayout>
 

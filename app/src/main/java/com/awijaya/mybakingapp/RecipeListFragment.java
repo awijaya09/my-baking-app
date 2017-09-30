@@ -81,13 +81,17 @@ public class RecipeListFragment extends Fragment {
             mProgressBar.animate();
         }
 
-        mInterface = RetrofitClient.getClient().create(RetrofitInterface.class);
-        downloadRcipeList();
-
+        if (mDataSources.isEmpty()){
+            mInterface = RetrofitClient.getClient().create(RetrofitInterface.class);
+            downloadRcipeList();
+        } else {
+            setCallBackForEachRecipe();
+            showRecipeList();
+        }
         return rootView;
     }
 
-    private void downloadRcipeList() {
+    public void downloadRcipeList() {
         if (mDataSources == null || mDataSources.isEmpty()) {
             Call<ArrayList<Recipe>> call = mInterface.getRecipeList();
             call.enqueue(new Callback<ArrayList<Recipe>>() {
@@ -116,6 +120,14 @@ public class RecipeListFragment extends Fragment {
             });
         }
 
+    }
+
+    public void setRecipeList(ArrayList<Recipe> recipeList){
+        this.mDataSources = recipeList;
+    }
+
+    public ArrayList<Recipe> getRecipeList(){
+        return this.mDataSources;
     }
 
     private void setCallBackForEachRecipe(){
