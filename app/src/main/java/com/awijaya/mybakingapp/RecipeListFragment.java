@@ -17,6 +17,7 @@ import com.awijaya.mybakingapp.Model.Recipe;
 import com.awijaya.mybakingapp.Model.Step;
 import com.awijaya.mybakingapp.Networking.RetrofitClient;
 import com.awijaya.mybakingapp.Networking.RetrofitInterface;
+import com.awijaya.mybakingapp.Networking.SharedNetworking;
 
 import java.util.ArrayList;
 
@@ -93,8 +94,7 @@ public class RecipeListFragment extends Fragment {
 
     public void downloadRcipeList() {
         if (mDataSources == null || mDataSources.isEmpty()) {
-            Call<ArrayList<Recipe>> call = mInterface.getRecipeList();
-            call.enqueue(new Callback<ArrayList<Recipe>>() {
+            SharedNetworking.downloadRcipeList(new Callback<ArrayList<Recipe>>() {
                 @Override
                 public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
                     Log.d(TAG, "onResponse: Getting data from JSON");
@@ -118,6 +118,7 @@ public class RecipeListFragment extends Fragment {
                     call.cancel();
                 }
             });
+
         }
 
     }
@@ -130,7 +131,7 @@ public class RecipeListFragment extends Fragment {
         return this.mDataSources;
     }
 
-    private void setCallBackForEachRecipe(){
+    public void setCallBackForEachRecipe(){
         HomeListViewAdapter adapter = new HomeListViewAdapter(getContext(), mDataSources);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -143,7 +144,7 @@ public class RecipeListFragment extends Fragment {
         });
     }
 
-    private void showRecipeList(){
+    public void showRecipeList(){
         isDownloading = false;
         mProgressBar.setVisibility(View.GONE);
         mListView.setVisibility(View.VISIBLE);

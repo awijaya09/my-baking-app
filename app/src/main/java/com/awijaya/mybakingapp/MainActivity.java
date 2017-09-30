@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
 
                         recipeListFragment.setRecipeList(mRecipeList);
 
-
                         mFragmentManager.beginTransaction()
                                 .replace(R.id.recipe_list_fragment_frame, recipeListFragment)
                                 .commit();
