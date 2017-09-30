@@ -73,7 +73,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     .replace(R.id.recipe_detail_fragment, recipeDetailFragment)
                     .commit();
         }
-        
+
     }
 
 
