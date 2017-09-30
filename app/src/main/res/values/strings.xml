@@ -10,4 +10,6 @@
     <string name="ing_title">Step(s)</string>
     <string name="estimated_time">35 Mins</string>
     <string name="ingredient_dialog_title">Ingredients</string>
+    <string name="appwidget_text">My Baking Recipe</string>
+    <string name="add_widget">Add widget</string>
 </resources>
