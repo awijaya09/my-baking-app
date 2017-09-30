@@ -22,6 +22,7 @@ public class SharedNetworking {
     private static RetrofitInterface mInterface;
     private static final String TAG = "Shared Networking";
 
+    //common callback method to get the recipe list
     public static ArrayList<Recipe> downloadRcipeList(Callback<ArrayList<Recipe>> callback) {
 
         final ArrayList<Recipe> mDataSources = new ArrayList<Recipe>();
@@ -31,6 +32,16 @@ public class SharedNetworking {
 
         return mDataSources;
 
+    }
+
+    public static ArrayList<String> addIngredientStrings(ArrayList<Ingredient> mIngredients){
+        ArrayList<String> mIngredientString = new ArrayList<String>();
+        for (Ingredient ing : mIngredients){
+            String ingNew = ing.ingredientQuantity + " " + ing.ingredientMeasure + " " + ing.ingredientName;
+            mIngredientString.add(ingNew);
+        }
+
+        return mIngredientString;
     }
 
 

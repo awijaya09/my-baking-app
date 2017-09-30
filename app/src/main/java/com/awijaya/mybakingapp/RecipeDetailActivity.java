@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.awijaya.mybakingapp.Model.Ingredient;
 import com.awijaya.mybakingapp.Model.Recipe;
 import com.awijaya.mybakingapp.Model.Step;
+import com.awijaya.mybakingapp.Networking.SharedNetworking;
 
 import org.w3c.dom.Text;
 
@@ -46,6 +48,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
+
         if (savedInstanceState == null){
             Intent intent = getIntent();
             mBundle = intent.getBundleExtra(MainActivity.RECIPE_INTENT_KEY);
@@ -57,7 +60,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             mRecipe.recipeIngredients = mIngredients;
             mRecipe.recipeSteps = mSteps;
 
-            addIngredientStrings();
+            mIngredientString = SharedNetworking.addIngredientStrings(mIngredients);
 
             setTitle(mRecipe.recipeName);
 
@@ -70,16 +73,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     .replace(R.id.recipe_detail_fragment, recipeDetailFragment)
                     .commit();
         }
-
-
+        
     }
 
-    private void addIngredientStrings(){
-        for (Ingredient ing : mIngredients){
-            String ingNew = ing.ingredientQuantity + " " + ing.ingredientMeasure + " " + ing.ingredientName;
-            mIngredientString.add(ingNew);
-        }
-    }
 
 
     @Override
@@ -100,7 +96,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     .items(mIngredientString)
                     .show();
         }
-
         return true;
     }
 

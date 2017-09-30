@@ -5,10 +5,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.awijaya.mybakingapp.Model.Ingredient;
 import com.awijaya.mybakingapp.Model.Recipe;
 import com.awijaya.mybakingapp.Model.Step;
@@ -32,7 +36,10 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
 
     private boolean mTwoPane = false;
     private FragmentManager mFragmentManager;
+    private Recipe curRecipe;
     private ArrayList<Recipe> mRecipeList = new ArrayList<Recipe>();
+    private ArrayList<Ingredient> mIngredients = new ArrayList<Ingredient>();
+    private ArrayList<String> mIngredientString = new ArrayList<String>();
 
     @BindView(R.id.recipe_list_fragment_frame)
     FrameLayout mRecipeListFrame;
@@ -75,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
                         if (!mRecipeList.isEmpty()) {
                             RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
                             recipeDetailFragment.setRecipeItem(mRecipeList.get(0));
-
+                            curRecipe = mRecipeList.get(0);
                             mFragmentManager.beginTransaction()
                                     .replace(R.id.recipe_detail_fragment_frame, recipeDetailFragment)
                                     .commit();
@@ -96,22 +103,71 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
 
     }
 
+    private void setupIngredientMenu(){
+        mIngredients = curRecipe.recipeIngredients;
+        mIngredientString = SharedNetworking.addIngredientStrings(mIngredients);
+    }
+
+
 
     @Override
     public void onItemSelected(Recipe recipe) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(RECIPE_BUNDLE_KEY, recipe);
 
-        ArrayList<Ingredient> mIngredient = recipe.recipeIngredients;
-        bundle.putParcelableArrayList(INGREDIENTS_BUNDLE_KEY, mIngredient);
+        if (mTwoPane){
+            RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
+            recipeDetailFragment.setRecipeItem(recipe);
+            curRecipe = recipe;
 
-        ArrayList<Step> mSteps = recipe.recipeSteps;
-        bundle.putParcelableArrayList(STEPS_BUNDLE_KEY, mSteps);
+            setupIngredientMenu();
 
-        final Intent intent = new Intent(this, RecipeDetailActivity.class);
-        intent.putExtra(RECIPE_INTENT_KEY, bundle);
+            mFragmentManager.beginTransaction()
+                    .replace(R.id.recipe_detail_fragment_frame, recipeDetailFragment)
+                    .commit();
+        } else {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(RECIPE_BUNDLE_KEY, recipe);
 
-        startActivity(intent);
+            ArrayList<Ingredient> mIngredient = recipe.recipeIngredients;
+            bundle.putParcelableArrayList(INGREDIENTS_BUNDLE_KEY, mIngredient);
+
+            ArrayList<Step> mSteps = recipe.recipeSteps;
+            bundle.putParcelableArrayList(STEPS_BUNDLE_KEY, mSteps);
+
+            final Intent intent = new Intent(this, RecipeDetailActivity.class);
+            intent.putExtra(RECIPE_INTENT_KEY, bundle);
+
+            startActivity(intent);
+        }
+
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (mTwoPane){
+
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.ingredient, menu);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.ingredient_list){
+            if (mIngredientString.isEmpty()){
+                setupIngredientMenu();
+            }
+            new MaterialDialog.Builder(this)
+                    .title(R.string.ingredient_dialog_title)
+                    .titleColorRes(R.color.colorPrimary)
+                    .dividerColorRes(R.color.colorAccent)
+                    .items(mIngredientString)
+                    .show();
+        }
+
+        return true;
+    }
 }
