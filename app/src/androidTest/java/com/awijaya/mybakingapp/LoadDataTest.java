@@ -17,7 +17,7 @@ public class LoadDataTest {
 
     @Test
     public void loadDataFromNetwork(){
-        
+
     }
 
 }
