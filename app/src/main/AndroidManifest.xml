@@ -37,7 +37,6 @@
         <receiver android:name=".MyBakingWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.awijaya.mybakingapp.DATA_FETCHED"/>
             </intent-filter>
 
             <meta-data
