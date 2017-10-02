@@ -7,9 +7,11 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.awijaya.mybakingapp.Model.Ingredient;
+import com.awijaya.mybakingapp.Model.Recipe;
 import com.awijaya.mybakingapp.R;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by awijaya on 10/1/17.
@@ -20,6 +22,7 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
     private Context mContext = null;
     private int appWidgetId;
 
+
     public ListProvider(Context context, Intent intent) {
         this.mContext = context;
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
@@ -29,7 +32,11 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
     }
 
     private void populateListItem(){
+        ArrayList<Recipe> mRecipe = (ArrayList<Recipe>) RemoteFetchService.mRecipe.clone();
 
+        Random r = new Random();
+        int recipeIndex = r.nextInt(mRecipe.size());
+        mIngredients = mRecipe.get(recipeIndex).recipeIngredients;
     }
 
     @Override

@@ -34,6 +34,7 @@ public class SharedNetworking {
 
     }
 
+
     public static ArrayList<String> addIngredientStrings(ArrayList<Ingredient> mIngredients){
         ArrayList<String> mIngredientString = new ArrayList<String>();
         for (Ingredient ing : mIngredients){
