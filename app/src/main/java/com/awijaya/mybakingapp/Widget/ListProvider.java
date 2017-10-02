@@ -31,9 +31,8 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
         populateListItem();
     }
 
-    private void populateListItem(){
+    private void populateListItem() {
         ArrayList<Recipe> mRecipe = (ArrayList<Recipe>) RemoteFetchService.mRecipe.clone();
-
         Random r = new Random();
         int recipeIndex = r.nextInt(mRecipe.size());
         mIngredients = mRecipe.get(recipeIndex).recipeIngredients;
@@ -61,8 +60,7 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public RemoteViews getViewAt(int i) {
-        final RemoteViews remoteView = new RemoteViews(
-                mContext.getPackageName(), R.layout.list_view_ingredient);
+        final RemoteViews remoteView = new RemoteViews(mContext.getPackageName(), R.layout.list_view_ingredient);
         Ingredient sIngredient = mIngredients.get(i);
         remoteView.setTextViewText(R.id.text_view_ingredient, sIngredient.ingredientName);
 
@@ -76,16 +74,16 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public int getViewTypeCount() {
-        return 0;
+        return 1;
     }
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return i;
     }
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 }
