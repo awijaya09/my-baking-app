@@ -3,6 +3,7 @@ package com.awijaya.mybakingapp;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -95,6 +96,7 @@ public class RecipeListFragment extends Fragment {
     public void downloadRcipeList() {
         if (mDataSources == null || mDataSources.isEmpty()) {
             SharedNetworking.downloadRcipeList(new Callback<ArrayList<Recipe>>() {
+
                 @Override
                 public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
                     Log.d(TAG, "onResponse: Getting data from JSON");
@@ -109,7 +111,6 @@ public class RecipeListFragment extends Fragment {
 
                     setCallBackForEachRecipe();
                     showRecipeList();
-
                 }
 
                 @Override

@@ -8,6 +8,8 @@
         android:id="@+id/text_view_ingredient"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp" />
+        android:padding="8dp"
+        android:textSize="14sp"
+        android:textColor="@color/whiteBackround"/>
 
 </LinearLayout>

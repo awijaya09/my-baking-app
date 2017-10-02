@@ -26,8 +26,10 @@ public class HomeListViewAdapter extends BaseAdapter {
     private ArrayList<Recipe> tempDataSource;
 
     public HomeListViewAdapter(Context context, ArrayList<Recipe> dataSource){
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        tempDataSource = dataSource;
+        if (context != null) {
+            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            tempDataSource = dataSource;
+        }
     }
     @Override
     public int getCount() {

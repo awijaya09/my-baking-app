@@ -1,6 +1,8 @@
 package com.awijaya.mybakingapp;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,14 +11,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.awijaya.mybakingapp.Model.Ingredient;
 import com.awijaya.mybakingapp.Model.Recipe;
 import com.awijaya.mybakingapp.Model.Step;
 import com.awijaya.mybakingapp.Networking.SharedNetworking;
+import com.awijaya.mybakingapp.Testing.SimpleIdlingResource;
+
+import android.support.test.espresso.idling.CountingIdlingResource;
 
 import java.util.ArrayList;
 
@@ -34,12 +37,18 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
     public static final String STEPS_BUNDLE_KEY = "step_item";
     private static final String TAG = "Main Activity";
 
+    private static final int DELAY_MILLIS = 3000;
     private boolean mTwoPane = false;
     private FragmentManager mFragmentManager;
     private Recipe curRecipe;
     private ArrayList<Recipe> mRecipeList = new ArrayList<Recipe>();
     private ArrayList<Ingredient> mIngredients = new ArrayList<Ingredient>();
     private ArrayList<String> mIngredientString = new ArrayList<String>();
+
+    CountingIdlingResource countingIdlingResource = new CountingIdlingResource("Retrofit_call");
+
+    @Nullable
+    private SimpleIdlingResource idlingResource;
 
     @BindView(R.id.recipe_list_fragment_frame)
     FrameLayout mRecipeListFrame;
@@ -60,8 +69,9 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
             if (savedInstanceState == null) {
                 mFragmentManager = getSupportFragmentManager();
                 final RecipeListFragment recipeListFragment = new RecipeListFragment();
-
+                countingIdlingResource.increment();
                 SharedNetworking.downloadRcipeList(new Callback<ArrayList<Recipe>>() {
+
                     @Override
                     public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
                         ArrayList<Recipe> recipeList = response.body();
@@ -87,12 +97,14 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
                                     .replace(R.id.recipe_detail_fragment_frame, recipeDetailFragment)
                                     .commit();
                         }
+
                     }
 
                     @Override
                     public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
                         Log.e(TAG, "onFailure: Unable to get data from JSON" + t.getMessage());
                         call.cancel();
+                        countingIdlingResource.decrement();
                     }
                 });
 
@@ -103,17 +115,20 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
 
     }
 
-    private void setupIngredientMenu(){
+    public CountingIdlingResource getEspressoIdlingResourceForMainActivity() {
+        return countingIdlingResource;
+    }
+
+    private void setupIngredientMenu() {
         mIngredients = curRecipe.recipeIngredients;
         mIngredientString = SharedNetworking.addIngredientStrings(mIngredients);
     }
 
 
-
     @Override
     public void onItemSelected(Recipe recipe) {
 
-        if (mTwoPane){
+        if (mTwoPane) {
             RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
             recipeDetailFragment.setRecipeItem(recipe);
             curRecipe = recipe;
@@ -143,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (mTwoPane){
+        if (mTwoPane) {
 
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.ingredient, menu);
@@ -156,8 +171,8 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.ingredient_list){
-            if (mIngredientString.isEmpty()){
+        if (item.getItemId() == R.id.ingredient_list) {
+            if (mIngredientString.isEmpty()) {
                 setupIngredientMenu();
             }
             new MaterialDialog.Builder(this)

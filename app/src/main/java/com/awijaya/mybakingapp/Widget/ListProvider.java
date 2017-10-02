@@ -3,6 +3,7 @@ package com.awijaya.mybakingapp.Widget;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -26,6 +27,7 @@ import retrofit2.Response;
 public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
     private static final String TAG = "List Provider caller";
     private ArrayList<Ingredient> mIngredients = new ArrayList<Ingredient>();
+    private Recipe tRecipe;
     private Context mContext = null;
 
     public ListProvider(Context context) {
@@ -50,7 +52,8 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
                 }
                 Random r = new Random();
                 int recipeIndex = r.nextInt(mRecipe.size());
-                mIngredients = mRecipe.get(recipeIndex).recipeIngredients;
+                tRecipe = mRecipe.get(recipeIndex);
+                mIngredients = tRecipe.recipeIngredients;
                 Log.d(TAG, "onResponse: ingredients recieved " + mIngredients.size());
             }
 
@@ -69,14 +72,19 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public int getCount() {
+        Log.d(TAG, "getCount: Ingredient Size = " + mIngredients.size());
         return (mIngredients == null) ? 0 : mIngredients.size();
     }
 
     @Override
     public RemoteViews getViewAt(int i) {
         final RemoteViews remoteView = new RemoteViews(mContext.getPackageName(), R.layout.list_view_ingredient);
-        Ingredient sIngredient = mIngredients.get(i);
-        remoteView.setTextViewText(R.id.text_view_ingredient, sIngredient.ingredientName);
+        if (i == 0) {
+            remoteView.setTextViewText(R.id.text_view_ingredient, tRecipe.recipeName);
+        } else {
+            Ingredient sIngredient = mIngredients.get(i);
+            remoteView.setTextViewText(R.id.text_view_ingredient, sIngredient.ingredientName);
+        }
 
         return remoteView;
     }
