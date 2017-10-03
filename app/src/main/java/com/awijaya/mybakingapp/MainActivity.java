@@ -17,7 +17,6 @@ import com.awijaya.mybakingapp.Model.Ingredient;
 import com.awijaya.mybakingapp.Model.Recipe;
 import com.awijaya.mybakingapp.Model.Step;
 import com.awijaya.mybakingapp.Networking.SharedNetworking;
-import com.awijaya.mybakingapp.Testing.SimpleIdlingResource;
 
 import android.support.test.espresso.idling.CountingIdlingResource;
 
@@ -37,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
     public static final String STEPS_BUNDLE_KEY = "step_item";
     private static final String TAG = "Main Activity";
 
-    private static final int DELAY_MILLIS = 3000;
     private boolean mTwoPane = false;
     private FragmentManager mFragmentManager;
     private Recipe curRecipe;
@@ -47,11 +45,11 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
 
     CountingIdlingResource countingIdlingResource = new CountingIdlingResource("Retrofit_call");
 
-    @Nullable
-    private SimpleIdlingResource idlingResource;
-
     @BindView(R.id.recipe_list_fragment_frame)
     FrameLayout mRecipeListFrame;
+
+    @BindView(R.id.recipe_list_fragment_single)
+    FrameLayout mRecipeListSingle;
 
     @BindView(R.id.recipe_detail_fragment_frame)
     FrameLayout mRecipeDetailFrame;
@@ -62,12 +60,12 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
         setContentView(R.layout.activity_main);
 
 
+        mFragmentManager = getSupportFragmentManager();
+
         if (findViewById(R.id.recipe_list_fragment_frame) != null) {
             mTwoPane = true;
             ButterKnife.bind(this);
-
             if (savedInstanceState == null) {
-                mFragmentManager = getSupportFragmentManager();
                 final RecipeListFragment recipeListFragment = new RecipeListFragment();
                 countingIdlingResource.increment();
                 SharedNetworking.downloadRcipeList(new Callback<ArrayList<Recipe>>() {
@@ -111,6 +109,39 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
             }
         } else {
             mTwoPane = false;
+
+            if (savedInstanceState == null) {
+                countingIdlingResource.increment();
+                final RecipeListFragment recipeListFragment = new RecipeListFragment();
+                SharedNetworking.downloadRcipeList(new Callback<ArrayList<Recipe>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
+                        ArrayList<Recipe> recipeList = response.body();
+                        for (Recipe recipeItem : recipeList) {
+                            mRecipeList.add(recipeItem);
+
+                            ArrayList<Ingredient> ingredients = recipeItem.recipeIngredients;
+                            ArrayList<Step> steps = recipeItem.recipeSteps;
+                        }
+
+                        recipeListFragment.setRecipeList(mRecipeList);
+
+                        mFragmentManager.beginTransaction()
+                                .replace(R.id.recipe_list_fragment_single, recipeListFragment)
+                                .commit();
+
+                        countingIdlingResource.decrement();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
+                        Log.e(TAG, "onFailure: Unable to get data from JSON" + t.getMessage());
+                        call.cancel();
+                        countingIdlingResource.decrement();
+                    }
+                });
+            }
+
         }
 
     }

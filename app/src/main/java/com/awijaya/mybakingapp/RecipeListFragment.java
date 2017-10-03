@@ -82,48 +82,10 @@ public class RecipeListFragment extends Fragment {
         if (isDownloading) {
             mProgressBar.animate();
         }
-
-        if (mDataSources.isEmpty()){
-            mInterface = RetrofitClient.getClient().create(RetrofitInterface.class);
-            downloadRcipeList();
-        } else {
-            setCallBackForEachRecipe();
-            showRecipeList();
-        }
+        setCallBackForEachRecipe();
+        showRecipeList();
         return rootView;
     }
-
-    public void downloadRcipeList() {
-        if (mDataSources == null || mDataSources.isEmpty()) {
-            SharedNetworking.downloadRcipeList(new Callback<ArrayList<Recipe>>() {
-
-                @Override
-                public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
-                    Log.d(TAG, "onResponse: Getting data from JSON");
-
-                    ArrayList<Recipe> recipeList = response.body();
-                    for (Recipe recipeItem : recipeList) {
-                        mDataSources.add(recipeItem);
-
-                        ArrayList<Ingredient> ingredients = recipeItem.recipeIngredients;
-                        ArrayList<Step> steps = recipeItem.recipeSteps;
-                    }
-
-                    setCallBackForEachRecipe();
-                    showRecipeList();
-                }
-
-                @Override
-                public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
-                    Log.e(TAG, "onFailure: Unable to get data from JSON" + t.getMessage());
-                    call.cancel();
-                }
-            });
-
-        }
-
-    }
-
     public void setRecipeList(ArrayList<Recipe> recipeList){
         this.mDataSources = recipeList;
     }

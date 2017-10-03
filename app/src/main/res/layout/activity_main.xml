@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/recipe_list_fragment"
-    android:name="com.awijaya.mybakingapp.RecipeListFragment"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"></fragment>
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:id="@+id/recipe_list_fragment_single"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside" />
+
+</LinearLayout>
