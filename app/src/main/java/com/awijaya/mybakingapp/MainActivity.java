@@ -48,9 +48,6 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
     @BindView(R.id.recipe_list_fragment_frame)
     FrameLayout mRecipeListFrame;
 
-    @BindView(R.id.recipe_list_fragment_single)
-    FrameLayout mRecipeListSingle;
-
     @BindView(R.id.recipe_detail_fragment_frame)
     FrameLayout mRecipeDetailFrame;
 
@@ -62,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
 
         mFragmentManager = getSupportFragmentManager();
 
-        if (findViewById(R.id.recipe_list_fragment_frame) != null) {
+        if (findViewById(R.id.recipe_detail_fragment_frame) != null) {
             mTwoPane = true;
             ButterKnife.bind(this);
             if (savedInstanceState == null) {
@@ -127,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
                         recipeListFragment.setRecipeList(mRecipeList);
 
                         mFragmentManager.beginTransaction()
-                                .replace(R.id.recipe_list_fragment_single, recipeListFragment)
+                                .replace(R.id.recipe_list_fragment_frame, recipeListFragment)
                                 .commit();
 
                         countingIdlingResource.decrement();
