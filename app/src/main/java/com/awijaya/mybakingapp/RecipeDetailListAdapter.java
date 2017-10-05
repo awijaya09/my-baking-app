@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.awijaya.mybakingapp.Model.Recipe;
@@ -32,6 +33,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -106,6 +108,13 @@ public class RecipeDetailListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 RecipeDetailListViewHolder recipeDetail = (RecipeDetailListViewHolder) holder;
                 recipeDetail.mIngQty.setText(stepItem.stepShortDescription);
                 recipeDetail.mIngMeasure.setText(stepItem.stepDescription);
+                if (stepItem.stepThumbnailURL != null && !stepItem.stepThumbnailURL.equals("")) {
+                    recipeDetail.mImageViewStep.setVisibility(View.VISIBLE);
+                    Picasso.with(mContext)
+                            .load(Uri.parse(stepItem.stepThumbnailURL))
+                            .placeholder(R.drawable.exoplayer_artwork)
+                            .into(recipeDetail.mImageViewStep);
+                }
                 return;
             default:
                 break;
@@ -135,6 +144,9 @@ public class RecipeDetailListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         @BindView(R.id.text_view_ingredient_item_measure)
         TextView mIngMeasure;
+
+        @BindView(R.id.image_view_steps)
+        ImageView mImageViewStep;
 
         public RecipeDetailListViewHolder(View itemView) {
             super(itemView);
