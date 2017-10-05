@@ -214,6 +214,7 @@ public class RecipeDetailListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, defaultDataSourceFactory, extractorsFactory, null, null );
             mExoPlayer.prepare(mediaSource);
+            mExoPlayer.seekTo(mLastPosition);
             mExoPlayer.setPlayWhenReady(true);
         }
     }
