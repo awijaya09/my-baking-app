@@ -32,6 +32,7 @@ public class Recipe implements Parcelable {
     @SerializedName("steps")
     public ArrayList<Step> recipeSteps;
 
+
     protected Recipe(Parcel in) {
         recipeId = in.readInt();
         recipeName = in.readString();

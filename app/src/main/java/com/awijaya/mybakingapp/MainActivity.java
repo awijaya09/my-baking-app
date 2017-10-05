@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
     private ArrayList<String> mIngredientString = new ArrayList<String>();
     CountingIdlingResource countingIdlingResource = new CountingIdlingResource("Retrofit_call");
 
-    @BindView(R.id.pb_main_activity)
+    @Nullable @BindView(R.id.pb_main_activity)
     ProgressBar mProgressbar;
 
     @BindView(R.id.recipe_list_fragment_frame)

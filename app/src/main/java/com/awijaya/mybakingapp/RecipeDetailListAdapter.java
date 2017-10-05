@@ -185,15 +185,16 @@ public class RecipeDetailListAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void playNextVideo(Uri mediaUri){
-        mExoPlayer.stop();
+        if (mExoPlayer != null){
+            mExoPlayer.stop();
 
-        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-        DefaultDataSourceFactory defaultDataSourceFactory = new DefaultDataSourceFactory(mContext, "BakingMedia");
+            ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+            DefaultDataSourceFactory defaultDataSourceFactory = new DefaultDataSourceFactory(mContext, "BakingMedia");
 
-        MediaSource mediaSource = new ExtractorMediaSource(mediaUri, defaultDataSourceFactory, extractorsFactory, null, null );
-        mExoPlayer.prepare(mediaSource);
-        mExoPlayer.setPlayWhenReady(true);
-
+            MediaSource mediaSource = new ExtractorMediaSource(mediaUri, defaultDataSourceFactory, extractorsFactory, null, null );
+            mExoPlayer.prepare(mediaSource);
+            mExoPlayer.setPlayWhenReady(true);
+        }
     }
 
 
@@ -261,7 +262,10 @@ public class RecipeDetailListAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public long getPlayerCurrentPost(){
-        return mExoPlayer.getCurrentPosition();
+        if (mExoPlayer != null) {
+            return mExoPlayer.getCurrentPosition();
+        }
+        return 0l;
     }
 
     public void setPlayerCurrentPost(long curPost){

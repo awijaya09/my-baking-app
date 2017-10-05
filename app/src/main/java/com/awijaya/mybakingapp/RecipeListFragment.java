@@ -97,7 +97,7 @@ public class RecipeListFragment extends Fragment implements HomeListAdapter.Home
     }
 
     public void setCallBackForEachRecipe(){
-        HomeListAdapter mAdapter = new HomeListAdapter(mDataSources, this);
+        HomeListAdapter mAdapter = new HomeListAdapter(getContext(), mDataSources, this);
         mLinearManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLinearManager);

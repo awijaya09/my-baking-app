@@ -153,4 +153,9 @@ public class RecipeDetailFragment extends Fragment {
         super.onStop();
         recipeAdapter.releasePlayer();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }
