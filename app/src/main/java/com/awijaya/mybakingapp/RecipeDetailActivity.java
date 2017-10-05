@@ -6,6 +6,7 @@ import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -47,7 +48,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
-
 
         if (savedInstanceState == null){
             Intent intent = getIntent();
@@ -95,6 +95,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     .dividerColorRes(R.color.colorAccent)
                     .items(mIngredientString)
                     .show();
+        } else if (item.getItemId() == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
         }
         return true;
     }

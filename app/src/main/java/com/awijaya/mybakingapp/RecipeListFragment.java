@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,21 +34,24 @@ import retrofit2.Response;
  * Created by awijaya on 9/17/17.
  */
 
-public class RecipeListFragment extends Fragment {
+public class RecipeListFragment extends Fragment implements HomeListAdapter.HomeListAdapterOnClickHandler {
 
-    @BindView(R.id.list_view_main)
-    ListView mListView;
-
-    @BindView(R.id.progress_bar_mainlist_fragment)
-    ProgressBar mProgressBar;
+    @BindView(R.id.rv_main_list)
+    RecyclerView mRecyclerView;
 
     private RetrofitInterface mInterface;
     private static final String TAG = "Retrofit Callback";
     private static final String RECIPE_LIST_KEY = "recipeList";
     private ArrayList<Recipe> mDataSources = new ArrayList<Recipe>();
     private boolean isDownloading = true;
+    private LinearLayoutManager mLinearManager;
 
     OnItemClickListener mCallback;
+
+    @Override
+    public void onItemClick(Recipe item) {
+        mCallback.onItemSelected(item);
+    }
 
     public interface OnItemClickListener {
         void onItemSelected(Recipe recipe);
@@ -79,9 +84,6 @@ public class RecipeListFragment extends Fragment {
             showRecipeList();
         }
 
-        if (isDownloading) {
-            mProgressBar.animate();
-        }
         setCallBackForEachRecipe();
         showRecipeList();
         return rootView;
@@ -95,25 +97,17 @@ public class RecipeListFragment extends Fragment {
     }
 
     public void setCallBackForEachRecipe(){
-        HomeListViewAdapter adapter = new HomeListViewAdapter(getContext(), mDataSources);
-        mListView.setAdapter(adapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                mCallback.onItemSelected(mDataSources.get(i));
-            }
-        });
+        HomeListAdapter mAdapter = new HomeListAdapter(mDataSources, this);
+        mLinearManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(mLinearManager);
+        mRecyclerView.setHasFixedSize(true);
     }
 
     public void showRecipeList(){
         isDownloading = false;
-        mProgressBar.setVisibility(View.GONE);
-        mListView.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
-
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

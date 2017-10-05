@@ -20,7 +20,8 @@
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:src="@mipmap/ic_cook" />
+            android:src="@mipmap/ic_cook"
+            android:id="@+id/imageView_icon"/>
 
         <LinearLayout
             android:layout_width="0dp"

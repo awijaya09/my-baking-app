@@ -42,9 +42,11 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -217,6 +219,7 @@ public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlaye
 
     }
 
+
     public void playNextVideo(Uri mediaUri){
         mExoPlayer.stop();
 
@@ -257,7 +260,6 @@ public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlaye
             DefaultDataSourceFactory defaultDataSourceFactory = new DefaultDataSourceFactory(mContext, "BakingMedia");
 
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, defaultDataSourceFactory, extractorsFactory, null, null );
-
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
         }
@@ -279,6 +281,13 @@ public class RecipeDetailListViewAdapter extends BaseAdapter implements ExoPlaye
         public void onSkipToPrevious() {
             mExoPlayer.seekTo(0);
         }
+
+        @Override
+        public void onStop() {
+            super.onStop();
+            mExoPlayer.release();
+        }
+
     }
 
 

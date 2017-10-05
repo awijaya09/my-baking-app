@@ -1,5 +1,6 @@
 package com.awijaya.mybakingapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -19,6 +21,8 @@ import com.awijaya.mybakingapp.Model.Step;
 import com.awijaya.mybakingapp.Networking.SharedNetworking;
 
 import android.support.test.espresso.idling.CountingIdlingResource;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -39,29 +43,35 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
     private boolean mTwoPane = false;
     private FragmentManager mFragmentManager;
     private Recipe curRecipe;
+    private Context mContext;
+    private HomeListAdapter adapter;
     private ArrayList<Recipe> mRecipeList = new ArrayList<Recipe>();
     private ArrayList<Ingredient> mIngredients = new ArrayList<Ingredient>();
     private ArrayList<String> mIngredientString = new ArrayList<String>();
-
     CountingIdlingResource countingIdlingResource = new CountingIdlingResource("Retrofit_call");
+
+    @BindView(R.id.pb_main_activity)
+    ProgressBar mProgressbar;
 
     @BindView(R.id.recipe_list_fragment_frame)
     FrameLayout mRecipeListFrame;
 
-    @BindView(R.id.recipe_detail_fragment_frame)
+    @Nullable @BindView(R.id.recipe_detail_fragment_frame)
     FrameLayout mRecipeDetailFrame;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        mContext = this;
         mFragmentManager = getSupportFragmentManager();
 
         if (findViewById(R.id.recipe_detail_fragment_frame) != null) {
             mTwoPane = true;
             ButterKnife.bind(this);
+            mProgressbar.animate();
             if (savedInstanceState == null) {
                 final RecipeListFragment recipeListFragment = new RecipeListFragment();
                 countingIdlingResource.increment();
@@ -78,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
                         }
 
                         recipeListFragment.setRecipeList(mRecipeList);
-
+                        mProgressbar.setVisibility(View.GONE);
                         mFragmentManager.beginTransaction()
                                 .replace(R.id.recipe_list_fragment_frame, recipeListFragment)
                                 .commit();
@@ -98,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
                     @Override
                     public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
                         Log.e(TAG, "onFailure: Unable to get data from JSON" + t.getMessage());
+                        Toast.makeText(mContext, "Sorry, something wrong with the connection!", Toast.LENGTH_SHORT).show();
                         call.cancel();
                         countingIdlingResource.decrement();
                     }
@@ -109,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
 
             if (savedInstanceState == null) {
                 countingIdlingResource.increment();
+                ButterKnife.bind(this);
                 final RecipeListFragment recipeListFragment = new RecipeListFragment();
                 SharedNetworking.downloadRcipeList(new Callback<ArrayList<Recipe>>() {
                     @Override
@@ -122,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
                         }
 
                         recipeListFragment.setRecipeList(mRecipeList);
-
+                        mProgressbar.setVisibility(View.GONE);
                         mFragmentManager.beginTransaction()
                                 .replace(R.id.recipe_list_fragment_frame, recipeListFragment)
                                 .commit();
@@ -133,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
                     @Override
                     public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
                         Log.e(TAG, "onFailure: Unable to get data from JSON" + t.getMessage());
+                        Toast.makeText(mContext, "Sorry, something wrong with the connection!", Toast.LENGTH_SHORT).show();
                         call.cancel();
                         countingIdlingResource.decrement();
                     }

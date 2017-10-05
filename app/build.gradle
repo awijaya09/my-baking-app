@@ -32,6 +32,7 @@ dependencies {
     compile 'com.android.support.test.espresso:espresso-idling-resource:2.2.2'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.afollestad.material-dialogs:core:0.9.4.7'
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.jakewharton:butterknife:8.8.1'
