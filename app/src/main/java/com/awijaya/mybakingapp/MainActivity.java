@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
             ButterKnife.bind(this);
             mProgressbar.animate();
             if (savedInstanceState == null) {
-                final RecipeListFragment recipeListFragment = new RecipeListFragment();
                 countingIdlingResource.increment();
                 SharedNetworking.downloadRcipeList(new Callback<ArrayList<Recipe>>() {
 
@@ -83,16 +82,9 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
                         for (Recipe recipeItem : recipeList) {
                             mRecipeList.add(recipeItem);
 
-                            ArrayList<Ingredient> ingredients = recipeItem.recipeIngredients;
-                            ArrayList<Step> steps = recipeItem.recipeSteps;
                         }
 
-                        recipeListFragment.setRecipeList(mRecipeList);
-                        mProgressbar.setVisibility(View.GONE);
-                        mFragmentManager.beginTransaction()
-                                .replace(R.id.recipe_list_fragment_frame, recipeListFragment)
-                                .commit();
-
+                        placeRecipeListFragment(mRecipeList);
 
                         if (!mRecipeList.isEmpty()) {
                             RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
@@ -107,10 +99,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
 
                     @Override
                     public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
-                        Log.e(TAG, "onFailure: Unable to get data from JSON" + t.getMessage());
-                        Toast.makeText(mContext, "Sorry, something wrong with the connection!", Toast.LENGTH_SHORT).show();
-                        call.cancel();
-                        countingIdlingResource.decrement();
+                        failedInGettingData(call, t);
                     }
                 });
 
@@ -121,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
             if (savedInstanceState == null) {
                 countingIdlingResource.increment();
                 ButterKnife.bind(this);
-                final RecipeListFragment recipeListFragment = new RecipeListFragment();
+
                 SharedNetworking.downloadRcipeList(new Callback<ArrayList<Recipe>>() {
                     @Override
                     public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
@@ -129,31 +118,37 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
                         for (Recipe recipeItem : recipeList) {
                             mRecipeList.add(recipeItem);
 
-                            ArrayList<Ingredient> ingredients = recipeItem.recipeIngredients;
-                            ArrayList<Step> steps = recipeItem.recipeSteps;
                         }
 
-                        recipeListFragment.setRecipeList(mRecipeList);
-                        mProgressbar.setVisibility(View.GONE);
-                        mFragmentManager.beginTransaction()
-                                .replace(R.id.recipe_list_fragment_frame, recipeListFragment)
-                                .commit();
-
+                        placeRecipeListFragment(mRecipeList);
                         countingIdlingResource.decrement();
                     }
 
                     @Override
                     public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
-                        Log.e(TAG, "onFailure: Unable to get data from JSON" + t.getMessage());
-                        Toast.makeText(mContext, "Sorry, something wrong with the connection!", Toast.LENGTH_SHORT).show();
-                        call.cancel();
-                        countingIdlingResource.decrement();
+                        failedInGettingData(call, t);
                     }
                 });
             }
 
         }
 
+    }
+
+    private void placeRecipeListFragment(ArrayList<Recipe> items) {
+        final RecipeListFragment recipeListFragment = new RecipeListFragment();
+        recipeListFragment.setRecipeList(mRecipeList);
+        mProgressbar.setVisibility(View.GONE);
+        mFragmentManager.beginTransaction()
+                .replace(R.id.recipe_list_fragment_frame, recipeListFragment)
+                .commit();
+    }
+
+    private void failedInGettingData(Call<ArrayList<Recipe>> call, Throwable t){
+        Log.e(TAG, "onFailure: Unable to get data from JSON" + t.getMessage());
+        Toast.makeText(mContext, "Sorry, something wrong with the connection!", Toast.LENGTH_SHORT).show();
+        call.cancel();
+        countingIdlingResource.decrement();
     }
 
     public CountingIdlingResource getEspressoIdlingResourceForMainActivity() {

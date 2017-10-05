@@ -35,9 +35,6 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.HomeLi
 
     class HomeListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.card_view_recipe)
-        CardView mCardView;
-
         @BindView(R.id.text_view_recipe_title)
         TextView mRecipeTitle;
 
