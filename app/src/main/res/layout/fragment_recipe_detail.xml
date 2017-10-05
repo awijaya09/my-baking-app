@@ -5,13 +5,10 @@
     android:layout_height="match_parent"
     android:visibility="visible">
 
-    <ListView
-        android:id="@+id/list_view_recipe_steps"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_detail_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="60dp"
-        tools:context=".RecipeDetailActivity"></ListView>
-
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"

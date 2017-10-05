@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.awijaya.mybakingapp.Model.Ingredient;
 import com.awijaya.mybakingapp.Model.Recipe;
@@ -36,10 +39,11 @@ public class RecipeDetailFragment extends Fragment {
     private static final String RECIPE_KEY = "recipe";
     public static final String INDEX_KEY = "curIndex";
     public static final String ING_KEY = "ingKey";
+    public static final String PLAYER_POS = "playerPos";
     private int curIndex = 0;
 
-    @BindView(R.id.list_view_recipe_steps)
-    ListView mListViewSteps;
+    @BindView(R.id.rv_detail_list)
+    RecyclerView mRecyclerViewDetail;
 
     @BindView(R.id.text_view_steps_title)
     TextView mStepTitle;
@@ -51,9 +55,11 @@ public class RecipeDetailFragment extends Fragment {
     Button mNextBtn;
 
     private Recipe mRecipe;
-    private RecipeDetailListViewAdapter mAdapter;
+    private LinearLayoutManager mAdapter;
+    private RecipeDetailListAdapter recipeAdapter;
     private ArrayList<Step> mSteps;
     private ArrayList<Ingredient> mIngredients;
+    private long curPlayerPos = 0l;
 
     public RecipeDetailFragment(){
 
@@ -67,11 +73,17 @@ public class RecipeDetailFragment extends Fragment {
         if (savedInstanceState != null) {
             mRecipe = savedInstanceState.getParcelable(RECIPE_KEY);
             curIndex = savedInstanceState.getInt(INDEX_KEY);
+            curPlayerPos = savedInstanceState.getLong(PLAYER_POS);
+            Toast.makeText(getContext(), "Saved Position: " + curPlayerPos, Toast.LENGTH_SHORT).show();
         }
 
-        Log.d(TAG, "onCreateView: curIndex value: " + curIndex);
-        mAdapter = new RecipeDetailListViewAdapter(getContext(), mRecipe, curIndex);
-        mListViewSteps.setAdapter(mAdapter);
+        mAdapter = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recipeAdapter = new RecipeDetailListAdapter(getContext(), mRecipe);
+        recipeAdapter.setPlayerCurrentPost(curPlayerPos);
+        mRecyclerViewDetail.setAdapter(recipeAdapter);
+        mRecyclerViewDetail.setLayoutManager(mAdapter);
+        mRecyclerViewDetail.setHasFixedSize(true);
+
         mSteps = mRecipe.recipeSteps;
         mIngredients = mRecipe.recipeIngredients;
 
@@ -81,6 +93,7 @@ public class RecipeDetailFragment extends Fragment {
             mPrevBtn.setEnabled(false);
         }
         setNextBtnClick();
+        setPrevBtnClick();
         return rootView;
     }
 
@@ -90,9 +103,24 @@ public class RecipeDetailFragment extends Fragment {
             public void onClick(View view) {
                 curIndex++;
                 Uri mediaUri = Uri.parse(mSteps.get(curIndex).stepVideoURL);
-                mAdapter.playNextVideo(mediaUri);
+                recipeAdapter.playNextVideo(mediaUri);
 
                 updateStepsTitle(mSteps.get(curIndex));
+            }
+        });
+    }
+
+    private void setPrevBtnClick() {
+        mPrevBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (curIndex > 0) {
+                    curIndex--;
+                    Uri mediaUri = Uri.parse(mSteps.get(curIndex).stepVideoURL);
+                    recipeAdapter.playNextVideo(mediaUri);
+
+                    updateStepsTitle(mSteps.get(curIndex));
+                }
             }
         });
     }
@@ -111,12 +139,18 @@ public class RecipeDetailFragment extends Fragment {
         outState.putParcelable(RECIPE_KEY, mRecipe);
         outState.putInt(INDEX_KEY, curIndex);
         outState.putParcelableArrayList(ING_KEY, mIngredients);
+        outState.putLong(PLAYER_POS, recipeAdapter.getPlayerCurrentPost());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mAdapter.releasePlayer();
-        Log.d(TAG, "onDestroyView: The view has been destroyed");
+        recipeAdapter.releasePlayer();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        recipeAdapter.releasePlayer();
     }
 }
