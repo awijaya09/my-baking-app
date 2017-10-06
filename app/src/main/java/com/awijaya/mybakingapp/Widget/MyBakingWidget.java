@@ -1,4 +1,4 @@
-package com.awijaya.mybakingapp;
+package com.awijaya.mybakingapp.Widget;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.awijaya.mybakingapp.Widget.RemoteFetchService;
+import com.awijaya.mybakingapp.R;
 import com.awijaya.mybakingapp.Widget.WidgetService;
 
 /**

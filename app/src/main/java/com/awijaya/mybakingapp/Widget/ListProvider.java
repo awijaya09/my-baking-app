@@ -3,14 +3,12 @@ package com.awijaya.mybakingapp.Widget;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.awijaya.mybakingapp.Model.Ingredient;
 import com.awijaya.mybakingapp.Model.Recipe;
-import com.awijaya.mybakingapp.MyBakingWidget;
 import com.awijaya.mybakingapp.Networking.SharedNetworking;
 import com.awijaya.mybakingapp.R;
 
@@ -26,8 +24,8 @@ import retrofit2.Response;
  */
 
 public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
-    private static final String TAG = "List Provider caller";
-    private ArrayList<Ingredient> mIngredients = new ArrayList<Ingredient>();
+    private static final String TAG = "ListProvider";
+    private ArrayList<Ingredient> mIngredients;
     //private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private Recipe tRecipe;
     private Context mContext = null;
@@ -39,12 +37,13 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onCreate() {
-
+        mIngredients = new ArrayList<Ingredient>();
     }
 
     @Override
     public void onDataSetChanged() {
         SharedNetworking.downloadRcipeList(new Callback<ArrayList<Recipe>>() {
+
             @Override
             public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
                 ArrayList<Recipe> mRecipe = new ArrayList<>();
@@ -56,7 +55,11 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
                 int recipeIndex = r.nextInt(mRecipe.size());
                 tRecipe = mRecipe.get(recipeIndex);
                 mIngredients = tRecipe.recipeIngredients;
-                Log.d(TAG, "onResponse: ingredients recieved " + mIngredients.size());
+                Log.d(TAG, "onResponse: List Provider triggered " + mIngredients.size());
+
+                Intent serviceIntent = new Intent(mContext, ListProvider.class);
+                serviceIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                mContext.startService(serviceIntent);
             }
 
             @Override
@@ -69,7 +72,7 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onDestroy() {
-
+        mIngredients.clear();
     }
 
     @Override
