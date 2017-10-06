@@ -27,10 +27,10 @@ public class Recipe implements Parcelable {
     public String recipeImage;
 
     @SerializedName("ingredients")
-    public ArrayList<Ingredient> recipeIngredients;
+    public ArrayList<Ingredient> recipeIngredients = new ArrayList<Ingredient>();
 
     @SerializedName("steps")
-    public ArrayList<Step> recipeSteps;
+    public ArrayList<Step> recipeSteps = new ArrayList<Step>();
 
 
     protected Recipe(Parcel in) {
@@ -38,6 +38,8 @@ public class Recipe implements Parcelable {
         recipeName = in.readString();
         recipeServings = in.readInt();
         recipeImage = in.readString();
+        in.readTypedList(recipeIngredients, Ingredient.CREATOR);
+        in.readTypedList(recipeSteps, Step.CREATOR);
     }
 
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
@@ -63,6 +65,8 @@ public class Recipe implements Parcelable {
         parcel.writeString(recipeName);
         parcel.writeInt(recipeServings);
         parcel.writeString(recipeImage);
+        parcel.writeTypedList(recipeIngredients);
+        parcel.writeTypedList(recipeSteps);
     }
 }
 

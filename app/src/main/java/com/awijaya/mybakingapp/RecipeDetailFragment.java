@@ -87,10 +87,6 @@ public class RecipeDetailFragment extends Fragment {
         mIngredients = mRecipe.recipeIngredients;
 
         updateStepsTitle(mSteps.get(curIndex));
-
-        if(curIndex == 0){
-            mPrevBtn.setEnabled(false);
-        }
         setNextBtnClick();
         setPrevBtnClick();
         return rootView;
@@ -100,11 +96,14 @@ public class RecipeDetailFragment extends Fragment {
         mNextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                curIndex++;
-                Uri mediaUri = Uri.parse(mSteps.get(curIndex).stepVideoURL);
-                recipeAdapter.playNextVideo(mediaUri);
 
-                updateStepsTitle(mSteps.get(curIndex));
+                if (!mSteps.isEmpty() && curIndex < mSteps.size() - 1) {
+                    curIndex++;
+                    Uri mediaUri = Uri.parse(mSteps.get(curIndex).stepVideoURL);
+                    recipeAdapter.playNextVideo(mediaUri);
+                    updateStepsTitle(mSteps.get(curIndex));
+                }
+
             }
         });
     }
@@ -113,7 +112,7 @@ public class RecipeDetailFragment extends Fragment {
         mPrevBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (curIndex > 0) {
+                if (!mSteps.isEmpty() && curIndex > 0) {
                     curIndex--;
                     Uri mediaUri = Uri.parse(mSteps.get(curIndex).stepVideoURL);
                     recipeAdapter.playNextVideo(mediaUri);

@@ -71,7 +71,9 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
         if (findViewById(R.id.recipe_detail_fragment_frame) != null) {
             mTwoPane = true;
             ButterKnife.bind(this);
-            mProgressbar.animate();
+            if (mProgressbar != null) {
+                mProgressbar.animate();
+            }
             if (savedInstanceState == null) {
                 countingIdlingResource.increment();
                 SharedNetworking.downloadRcipeList(new Callback<ArrayList<Recipe>>() {

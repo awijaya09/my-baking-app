@@ -10,6 +10,7 @@ import android.widget.RemoteViewsService;
 
 import com.awijaya.mybakingapp.Model.Ingredient;
 import com.awijaya.mybakingapp.Model.Recipe;
+import com.awijaya.mybakingapp.MyBakingWidget;
 import com.awijaya.mybakingapp.Networking.SharedNetworking;
 import com.awijaya.mybakingapp.R;
 
@@ -27,6 +28,7 @@ import retrofit2.Response;
 public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
     private static final String TAG = "List Provider caller";
     private ArrayList<Ingredient> mIngredients = new ArrayList<Ingredient>();
+    private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private Recipe tRecipe;
     private Context mContext = null;
 
