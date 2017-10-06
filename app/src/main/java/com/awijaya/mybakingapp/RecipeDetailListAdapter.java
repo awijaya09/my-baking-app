@@ -54,6 +54,7 @@ public class RecipeDetailListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private MediaSessionCompat mMediaSession;
     private SimpleExoPlayer mExoPlayer;
+    private SimpleExoPlayerView mExoPlayerView;
     private PlaybackStateCompat.Builder mStateBuilder;
     private Context mContext;
     private long mLastPosition = 0l;
@@ -100,8 +101,9 @@ public class RecipeDetailListAdapter extends RecyclerView.Adapter<RecyclerView.V
             case 0:
                 Uri mediaURI = Uri.parse(mRecipe.recipeSteps.get(stepIndex).stepVideoURL);
                 RecipeVideoViewHolder videoHolder = (RecipeVideoViewHolder) holder;
+                mExoPlayerView = videoHolder.mSimpleExoPlayer;
                 initializeMediaSession();
-                initializePlayer(videoHolder.mSimpleExoPlayer, mediaURI);
+                initializePlayer(mExoPlayerView, mediaURI);
                 return;
             case 2:
                 Step stepItem = mRecipe.recipeSteps.get(position-2);
@@ -197,6 +199,13 @@ public class RecipeDetailListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
+    public void initializeMedia() {
+        if (mExoPlayerView != null) {
+            Uri mediaURI = Uri.parse(mRecipe.recipeSteps.get(stepIndex).stepVideoURL);
+            initializeMediaSession();
+            initializePlayer(mExoPlayerView, mediaURI);
+        }
+    }
 
     private void initializeMediaSession() {
         mMediaSession = new MediaSessionCompat(mContext, TAG);

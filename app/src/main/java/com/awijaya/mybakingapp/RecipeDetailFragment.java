@@ -74,7 +74,6 @@ public class RecipeDetailFragment extends Fragment {
             mRecipe = savedInstanceState.getParcelable(RECIPE_KEY);
             curIndex = savedInstanceState.getInt(INDEX_KEY);
             curPlayerPos = savedInstanceState.getLong(PLAYER_POS);
-            Toast.makeText(getContext(), "Saved Position: " + curPlayerPos, Toast.LENGTH_SHORT).show();
         }
 
         mAdapter = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -157,5 +156,6 @@ public class RecipeDetailFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        recipeAdapter.initializeMedia();
     }
 }

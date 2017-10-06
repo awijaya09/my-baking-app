@@ -37,7 +37,7 @@ public class LoadDataTest {
 
     @Test
     public void checkIfListIsDisplayed(){
-        onView(withId(R.id.list_view_main)).check(ViewAssertions.matches(isDisplayed()));
+        onView(withId(R.id.rv_main_list)).check(ViewAssertions.matches(isDisplayed()));
     }
 
     @After
