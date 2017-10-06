@@ -1,6 +1,8 @@
 package com.awijaya.mybakingapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.awijaya.mybakingapp.Model.Recipe;
+import com.awijaya.mybakingapp.Widget.MyBakingWidget;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -95,8 +100,26 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.HomeLi
         viewHolder.mFaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Gson gson = new Gson();
+                String json = gson.toJson(mRecipe.recipeIngredients);
+
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences("com.awijaya.data", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("saved_recipe", json);
+                editor.commit();
+
+                sendBroadcast();
+                Toast.makeText(mContext, "You just saved " + mRecipe.recipeName, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void sendBroadcast() {
+
+        Intent intent = new Intent(mContext, MyBakingWidget.class);
+        intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+        mContext.sendBroadcast(intent);
     }
 
     @Override

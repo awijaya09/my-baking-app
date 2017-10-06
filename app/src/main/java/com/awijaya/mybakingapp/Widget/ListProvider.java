@@ -3,16 +3,23 @@ package com.awijaya.mybakingapp.Widget;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.awijaya.mybakingapp.MainActivity;
 import com.awijaya.mybakingapp.Model.Ingredient;
 import com.awijaya.mybakingapp.Model.Recipe;
 import com.awijaya.mybakingapp.Networking.SharedNetworking;
 import com.awijaya.mybakingapp.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 
 import retrofit2.Call;
@@ -25,7 +32,7 @@ import retrofit2.Response;
 
 public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
     private static final String TAG = "ListProvider";
-    private ArrayList<Ingredient> mIngredients;
+    private Collection<Ingredient> mIngredients;
     //private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private Recipe tRecipe;
     private Context mContext = null;
@@ -42,32 +49,14 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onDataSetChanged() {
-        SharedNetworking.downloadRcipeList(new Callback<ArrayList<Recipe>>() {
-
-            @Override
-            public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
-                ArrayList<Recipe> mRecipe = new ArrayList<>();
-                ArrayList<Recipe> recipeList = response.body();
-                for (Recipe recipeItem : recipeList) {
-                    mRecipe.add(recipeItem);
-                }
-                Random r = new Random();
-                int recipeIndex = r.nextInt(mRecipe.size());
-                tRecipe = mRecipe.get(recipeIndex);
-                mIngredients = tRecipe.recipeIngredients;
-                Log.d(TAG, "onResponse: List Provider triggered " + mIngredients.size());
-
-                Intent serviceIntent = new Intent(mContext, ListProvider.class);
-                serviceIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-                mContext.startService(serviceIntent);
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
-                Log.e("ListProvider", "onFailure: Unable to get data from JSON" + t.getMessage());
-                call.cancel();
-            }
-        });
+        SharedPreferences preferences = mContext.getSharedPreferences("com.awijaya.data", Context.MODE_PRIVATE);
+        String json = preferences.getString("saved_recipe", "");
+        if (!json.equals("")) {
+            Gson gson = new Gson();
+            Type collectionType = new TypeToken<Collection<Ingredient>>() {
+            }.getType();
+            mIngredients = gson.fromJson(json, collectionType);
+        }
     }
 
     @Override
@@ -83,15 +72,15 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public RemoteViews getViewAt(int i) {
-        final RemoteViews remoteView = new RemoteViews(mContext.getPackageName(), R.layout.list_view_ingredient);
-        if (i == 0) {
-            remoteView.setTextViewText(R.id.text_view_ingredient, tRecipe.recipeName);
-        } else {
-            Ingredient sIngredient = mIngredients.get(i);
-            remoteView.setTextViewText(R.id.text_view_ingredient, sIngredient.ingredientName);
-        }
+        if (mIngredients != null) {
+            final RemoteViews remoteView = new RemoteViews(mContext.getPackageName(), R.layout.list_view_ingredient);
 
-        return remoteView;
+            Ingredient sIngredient = (Ingredient) mIngredients.toArray()[i];
+            remoteView.setTextViewText(R.id.text_view_ingredient, sIngredient.ingredientName);
+
+            return remoteView;
+        }
+        return null;
     }
 
     @Override
