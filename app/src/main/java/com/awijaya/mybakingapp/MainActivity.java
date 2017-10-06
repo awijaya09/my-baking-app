@@ -25,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
 
         mContext = this;
         mFragmentManager = getSupportFragmentManager();
+
 
         if (findViewById(R.id.recipe_detail_fragment_frame) != null) {
             mTwoPane = true;

@@ -37,9 +37,7 @@ public class RemoteFetchService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID))
-            appWidgetId = intent.getIntExtra(
-                    AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    AppWidgetManager.INVALID_APPWIDGET_ID);
+            appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         fetchDataFromWeb();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -51,9 +49,6 @@ public class RemoteFetchService extends Service {
                 ArrayList<Recipe> recipeList = response.body();
                 for (Recipe recipeItem : recipeList) {
                     mRecipe.add(recipeItem);
-
-                    ArrayList<Ingredient> ingredients = recipeItem.recipeIngredients;
-                    ArrayList<Step> steps = recipeItem.recipeSteps;
                 }
 
                 populateWidget();

@@ -12,4 +12,5 @@
     <string name="ingredient_dialog_title">Ingredients</string>
     <string name="appwidget_text">My Baking Recipe</string>
     <string name="add_widget">Add widget</string>
+    <string name="btn_fave">Save</string>
 </resources>

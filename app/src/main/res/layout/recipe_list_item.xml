@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:scaleType="centerCrop"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -65,20 +65,37 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/text_view_estimated_time"
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="8dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/primary_light"
-                android:gravity="center"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                android:text="@string/estimated_time"
-                android:textColor="@color/colorPrimary"
-                android:textSize="12sp"
-                android:textStyle="italic" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_view_estimated_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/primary_light"
+                    android:gravity="center"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    android:text="@string/estimated_time"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"
+                    android:textStyle="italic" />
+
+                <Button
+                    android:id="@+id/btn_add_favourite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/whiteBackround"
+                    android:text="@string/btn_fave"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
     </LinearLayout>

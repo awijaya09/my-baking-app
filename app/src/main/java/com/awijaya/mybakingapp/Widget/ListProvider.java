@@ -28,7 +28,7 @@ import retrofit2.Response;
 public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
     private static final String TAG = "List Provider caller";
     private ArrayList<Ingredient> mIngredients = new ArrayList<Ingredient>();
-    private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    //private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private Recipe tRecipe;
     private Context mContext = null;
 

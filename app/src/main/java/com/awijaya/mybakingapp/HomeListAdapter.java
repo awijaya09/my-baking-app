@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,6 +53,9 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.HomeLi
         @BindView(R.id.text_view_estimated_time)
         TextView mEstimatedTime;
 
+        @BindView(R.id.btn_add_favourite)
+        Button mFaveButton;
+
         public HomeListViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
@@ -76,7 +80,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.HomeLi
 
     @Override
     public void onBindViewHolder(HomeListViewHolder viewHolder, int position) {
-        Recipe mRecipe = tempDataSource.get(position);
+        final Recipe mRecipe = tempDataSource.get(position);
         int stepCounter = mRecipe.recipeSteps.size();
         viewHolder.mRecipeTitle.setText(tempDataSource.get(position).recipeName);
         viewHolder.mStepsCount.setText(stepCounter+ " Steps");
@@ -88,6 +92,11 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.HomeLi
                     .placeholder(R.drawable.exoplayer_artwork)
                     .into(viewHolder.mImageView);
         }
+        viewHolder.mFaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
     }
 
     @Override
