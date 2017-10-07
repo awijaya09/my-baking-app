@@ -73,9 +73,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
         if (findViewById(R.id.recipe_detail_fragment_frame) != null) {
             mTwoPane = true;
             ButterKnife.bind(this);
-            if (mProgressbar != null) {
-                mProgressbar.animate();
-            }
+
             if (savedInstanceState == null) {
                 countingIdlingResource.increment();
                 SharedNetworking.downloadRcipeList(new Callback<ArrayList<Recipe>>() {
@@ -142,7 +140,9 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
     private void placeRecipeListFragment(ArrayList<Recipe> items) {
         final RecipeListFragment recipeListFragment = new RecipeListFragment();
         recipeListFragment.setRecipeList(mRecipeList);
-        mProgressbar.setVisibility(View.GONE);
+        if (mProgressbar != null) {
+            mProgressbar.setVisibility(View.GONE);
+        }
         mFragmentManager.beginTransaction()
                 .replace(R.id.recipe_list_fragment_frame, recipeListFragment)
                 .commit();
